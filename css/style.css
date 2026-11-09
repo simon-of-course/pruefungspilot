@@ -36,11 +36,14 @@
 }
 body[data-subject="politics"], .theme-politics { --accent: #059669; --accent-2: #0d9488; }
 body[data-subject="network"], .theme-network { --accent: #4f46e5; --accent-2: #7c3aed; }
+body[data-subject="digestion"], .theme-digestion { --accent: #e11d48; --accent-2: #db2777; }
 :root[data-theme="dark"] body[data-subject="politics"], :root[data-theme="dark"] .theme-politics { --accent: #34d399; --accent-2: #2dd4bf; }
 :root[data-theme="dark"] body[data-subject="network"], :root[data-theme="dark"] .theme-network { --accent: #818cf8; --accent-2: #a78bfa; }
+:root[data-theme="dark"] body[data-subject="digestion"], :root[data-theme="dark"] .theme-digestion { --accent: #fb7185; --accent-2: #f472b6; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) body[data-subject="politics"], :root:not([data-theme="light"]) .theme-politics { --accent: #34d399; --accent-2: #2dd4bf; }
   :root:not([data-theme="light"]) body[data-subject="network"], :root:not([data-theme="light"]) .theme-network { --accent: #818cf8; --accent-2: #a78bfa; }
+  :root:not([data-theme="light"]) body[data-subject="digestion"], :root:not([data-theme="light"]) .theme-digestion { --accent: #fb7185; --accent-2: #f472b6; }
 }
 
 * { box-sizing: border-box; }
@@ -72,6 +75,8 @@ img, svg { max-width: 100%; }
 .brand small { display: block; font-weight: 500; font-size: .72rem; color: var(--muted); }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .nav-label { margin: 12px 10px 4px; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.nav-select { width: calc(100% - 12px); margin: 0 6px 4px; padding: 7px 10px; font-size: .85rem; }
+.group-title { margin: 18px 0 2px; font-size: 1rem; color: var(--muted); }
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; color: var(--text); text-decoration: none; font-weight: 500; font-size: .95rem; }
 .nav-item:hover { background: var(--bg-2); }
 .nav-item.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
@@ -231,6 +236,14 @@ div.callout { padding: 12px 16px; border-radius: 10px; background: var(--surface
 .dg-head { fill: var(--muted); }
 .dg-check { stroke: var(--accent); stroke-width: 3; fill: none; stroke-linecap: round; }
 .vert { writing-mode: vertical-rl; }
+.dg-tube { fill: none; stroke: color-mix(in srgb, var(--accent) 35%, var(--surface)); stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
+.dg-tube.dg-thin { stroke-width: 10; }
+.dg-tube.dg-tube2 { stroke: color-mix(in srgb, var(--accent-2) 45%, var(--surface)); }
+.dg-tube.dg-duct { stroke: color-mix(in srgb, #16a34a 55%, var(--surface)); stroke-width: 7; }
+.dg-mark { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+.dg-pylorus { stroke: var(--accent); stroke-width: 6; stroke-linecap: round; }
+.dg-vessel { fill: none; stroke: #dc2626; stroke-width: 2; opacity: .75; }
+.dg-lymph { stroke: #eab308; stroke-width: 2.5; }
 
 /* Video */
 .video-frame { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; margin: 12px 0; }

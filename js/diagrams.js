@@ -10,6 +10,111 @@ const box = (x, y, w, h, cls = "dg-box", rx = 10) => `<rect x="${x}" y="${y}" wi
 const text = (x, y, t, cls = "dg-t", anchor = "middle") => `<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${esc(t)}</text>`;
 const line = (x1, y1, x2, y2, cls = "dg-line", arrow = true) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${cls}"${arrow ? ' marker-end="MARK"' : ""}/>`;
 
+// Organ-Schemata: nummerierte Marker; mit Legende (Lernansicht) oder ohne (Beschriftungsaufgabe).
+const ORGAN_MAPS = {
+  tract: {
+    w: 470, h: 500, title: "Verdauungstrakt (schematisch)",
+    body: `
+      <ellipse cx="212" cy="36" rx="17" ry="11" class="dg-box dg-accent2"/><ellipse cx="226" cy="62" rx="12" ry="7" class="dg-box dg-accent2"/>
+      <ellipse cx="270" cy="40" rx="36" ry="15" class="dg-box dg-soft"/>
+      <path d="M290,54 L296,84 L304,160" class="dg-tube dg-thin"/>
+      <path d="M110,150 C150,120 260,118 296,140 C300,160 280,195 240,205 C190,215 130,205 110,180 Z" class="dg-box dg-accent2"/>
+      <ellipse cx="236" cy="218" rx="15" ry="10" class="dg-box dg-accent"/>
+      <path d="M300,240 C330,230 380,234 412,228 C420,234 414,246 402,248 C372,252 332,254 304,258 Z" class="dg-box dg-accent2"/>
+      <path d="M296,160 C340,135 410,160 398,210 C390,250 340,258 312,236 C330,230 350,215 345,195 C340,178 318,172 300,176 Z" class="dg-box dg-soft"/>
+      <path d="M310,234 C282,232 272,262 296,268 C312,272 318,282 318,304" class="dg-tube dg-thin"/>
+      <path d="M318,304 C360,302 410,312 400,332 C390,352 250,332 232,347 C214,362 250,374 300,370" class="dg-tube dg-thin"/>
+      <path d="M300,370 C360,368 420,372 410,392 C400,412 300,397 250,407 C220,414 200,426 186,434" class="dg-tube dg-thin dg-tube2"/>
+      <path d="M170,430 L170,304 Q170,290 184,290 L424,284 Q440,284 440,300 L440,400 C440,440 392,416 362,432" class="dg-tube"/>
+      <ellipse cx="170" cy="440" rx="17" ry="15" class="dg-box dg-accent2"/>
+      <path d="M164,452 C160,470 174,478 180,470" class="dg-tube dg-thin"/>
+      <path d="M362,432 C342,442 326,440 324,456 L324,470" class="dg-tube dg-tube2"/>
+      <rect x="312" y="472" width="24" height="10" rx="4" class="dg-box dg-accent"/>`,
+    items: [
+      [1, 270, 40, "Mundhöhle – Cavum oris"], [2, 318, 70, "Rachen – Pharynx"], [3, 326, 124, "Speiseröhre – Ösophagus"],
+      [4, 372, 196, "Magen – Gaster"], [5, 262, 258, "Zwölffingerdarm – Duodenum"], [6, 212, 330, "Leerdarm – Jejunum"],
+      [7, 214, 400, "Krummdarm – Ileum"], [8, 140, 446, "Blinddarm – Caecum"], [9, 212, 270, "Grimmdarm – Colon"],
+      [10, 300, 452, "Mastdarm – Rektum"], [11, 350, 480, "After – Anus"], ["A", 190, 56, "Speicheldrüsen"],
+      ["B", 170, 166, "Leber – Hepar"], ["C", 214, 234, "Gallenblase"], ["D", 430, 236, "Bauchspeicheldrüse – Pankreas"]
+    ]
+  },
+  stomach: {
+    w: 410, h: 330, title: "Magen (Gaster)",
+    body: `
+      <path d="M245,6 L245,66" class="dg-tube"/>
+      <path d="M260,62 C290,20 370,25 380,90 C395,170 370,270 280,295 C200,320 120,290 95,250 L80,238 L80,200 C110,200 160,225 195,205 C228,185 232,130 230,70 Z" class="dg-box dg-soft"/>
+      <line x1="262" y1="64" x2="372" y2="64" class="dg-line dg-dash"/>
+      <line x1="196" y1="205" x2="236" y2="303" class="dg-line dg-dash"/>
+      <line x1="82" y1="198" x2="82" y2="240" class="dg-pylorus"/>
+      <path d="M78,219 L44,219 L34,262" class="dg-tube"/>
+      ${text(40, 290, "Duodenum", "dg-t dg-xs dg-muted")}`,
+    items: [
+      [1, 268, 86, "Kardia – Mageneingang"], [2, 320, 46, "Fundus – Magengrund"], [3, 300, 170, "Korpus – Magenkörper"],
+      [4, 150, 262, "Antrum – Pförtnervorraum"], [5, 82, 180, "Pylorus – Magenpförtner"], [6, 172, 186, "Curvatura minor"],
+      [7, 396, 196, "Curvatura major"]
+    ],
+    extra: () => {
+      let b = box(420, 196, 250, 124, "dg-box dg-accent2") + text(545, 216, "Zellen der Magenschleimhaut", "dg-t dg-xs dg-b");
+      [["Hauptzellen", "Pepsinogen"], ["Belegzellen", "HCl + Intrinsic-Faktor"], ["Nebenzellen", "Schleim (Schutz)"], ["G-Zellen (Antrum)", "Gastrin (Hormon)"]]
+        .forEach(([z, p], i) => { b += text(432, 240 + i * 20, z, "dg-t dg-xs dg-b", "start") + text(660, 240 + i * 20, p, "dg-t dg-xs", "end"); });
+      return b;
+    }
+  },
+  colon: {
+    w: 580, h: 430, title: "Dickdarm (Intestinum crassum)",
+    body: `
+      <path d="M250,300 C200,300 170,320 140,328" class="dg-tube dg-thin dg-tube2"/>
+      ${text(256, 304, "Ileum (Bauhin-Klappe)", "dg-t dg-xs dg-muted", "start")}
+      <path d="M120,330 L120,95 Q120,70 145,70 Q320,115 485,70 Q510,70 510,95 L510,270 C510,330 430,300 400,320 C375,336 340,320 335,345" class="dg-tube"/>
+      <ellipse cx="120" cy="345" rx="22" ry="20" class="dg-box dg-accent2"/>
+      <path d="M112,362 C108,385 125,395 132,388" class="dg-tube dg-thin"/>
+      <path d="M335,345 L335,395" class="dg-tube dg-tube2"/>
+      <rect x="322" y="398" width="26" height="12" rx="4" class="dg-box dg-accent"/>
+      ${text(320, 230, "Nummern = Weg des Stuhls", "dg-t dg-xs dg-muted")}
+      ${text(320, 248, "von kranial (1) nach kaudal (10)", "dg-t dg-xs dg-muted")}`,
+    items: [
+      [1, 80, 345, "Caecum – Blinddarm"], [2, 150, 398, "Appendix vermiformis"], [3, 150, 200, "Colon ascendens"],
+      [4, 100, 52, "Flexura coli dextra"], [5, 320, 126, "Colon transversum"], [6, 532, 52, "Flexura coli sinistra"],
+      [7, 540, 200, "Colon descendens"], [8, 455, 345, "Colon sigmoideum (Sigma)"], [9, 362, 372, "Rektum – Mastdarm"],
+      [10, 362, 408, "Anus – After"]
+    ]
+  },
+  liver: {
+    w: 540, h: 400, title: "Leber, Gallenwege und Pankreas",
+    body: `
+      <path d="M40,60 C120,20 380,20 470,60 C480,90 420,130 330,150 C230,170 90,160 40,120 Z" class="dg-box dg-accent2"/>
+      <path d="M235,280 C260,262 300,290 340,280 C400,266 450,252 515,256 C530,262 522,284 505,288 C450,298 390,310 330,325 C280,336 230,320 235,280 Z" class="dg-box dg-soft"/>
+      <path d="M505,272 C440,282 360,300 302,334" class="dg-line dg-dash"/>
+      <path d="M230,236 C180,240 175,345 250,345 L360,345" class="dg-tube"/>
+      <path d="M300,150 L300,205 L300,334" class="dg-tube dg-duct"/>
+      <ellipse cx="228" cy="216" rx="20" ry="34" transform="rotate(-35 228 216)" class="dg-box dg-accent"/>
+      <path d="M246,190 C265,202 285,206 300,206" class="dg-tube dg-duct"/>
+      <circle cx="300" cy="340" r="5" class="dg-mark"/>`,
+    items: [
+      [1, 160, 95, "Leber – Hepar"], [2, 222, 220, "Gallenblase"], [3, 268, 182, "Ductus cysticus"], [4, 322, 235, "Ductus choledochus"],
+      [5, 460, 276, "Pankreas"], [6, 168, 300, "Duodenum"], [7, 300, 378, "Papilla Vateri"]
+    ]
+  }
+};
+
+function organMap(id, blank) {
+  const m = ORGAN_MAPS[id];
+  const legendX = m.w + 10;
+  const w = blank ? m.w : legendX + 250;
+  let b = m.body;
+  m.items.forEach(([n, x, y]) => { b += `<circle cx="${x}" cy="${y}" r="11" class="dg-mark"/>` + text(x, y + 4, n, "dg-t dg-xs dg-b"); });
+  if (!blank) {
+    b += text(legendX, 22, m.title, "dg-t dg-s dg-b", "start");
+    m.items.forEach(([n, , , label], i) => {
+      const y = 46 + i * 24;
+      b += `<circle cx="${legendX + 10}" cy="${y - 4}" r="9" class="dg-mark"/>` + text(legendX + 10, y, n, "dg-t dg-xs dg-b") + text(legendX + 26, y, label, "dg-t dg-xs", "start");
+    });
+    if (m.extra) b += m.extra();
+  }
+  const label = blank ? `${m.title} – leere Vorlage zum Beschriften` : `${m.title} mit Beschriftung`;
+  return svg(id + (blank ? "-blank" : ""), w, m.h, b, label);
+}
+
 const diagrams = {
   rights: () => svg("rights", 640, 320, `
     ${box(20, 16, 600, 44, "dg-box dg-accent")}
@@ -187,6 +292,112 @@ const diagrams = {
     });
     b += text(320, 284, "Wie in Wireshark: jede Schicht ist in die vorherige eingebettet.", "dg-t dg-xs dg-muted");
     return svg("capture", 640, 296, b, "Aufbau eines Paketmitschnitts nach Schichten");
+  },
+
+  // ---------- MFA: Verdauungsapparat ----------
+  tract: () => organMap("tract", false),
+  "tract-blank": () => organMap("tract", true),
+  stomach: () => organMap("stomach", false),
+  "stomach-blank": () => organMap("stomach", true),
+  colon: () => organMap("colon", false),
+  "colon-blank": () => organMap("colon", true),
+  liver: () => organMap("liver", false),
+  "liver-blank": () => organMap("liver", true),
+
+  swallow: () => {
+    const phases = [
+      ["1 Orale Phase", "willkürlich", ["Zunge formt den Bolus", "und schiebt ihn", "in den Rachen"]],
+      ["2 Pharyngeale Phase", "Reflex", ["Gaumensegel ↑ → Nasenraum zu", "Kehldeckel → Luftröhre zu", "kurzer Atemstopp"]],
+      ["3 Ösophageale Phase", "Reflex", ["oberer Schließmuskel öffnet", "Peristaltik schiebt den", "Bolus in den Magen"]]
+    ];
+    let b = text(330, 24, "Der Schluckakt", "dg-t dg-b");
+    phases.forEach(([t, s, l], i) => {
+      const x = 14 + i * 218;
+      b += box(x, 38, 196, 138, i ? "dg-box dg-soft" : "dg-box dg-accent") + text(x + 98, 62, t, "dg-t dg-s dg-b") + text(x + 98, 82, s, "dg-t dg-xs dg-muted");
+      l.forEach((z, j) => { b += text(x + 98, 110 + j * 20, z, "dg-t dg-xs"); });
+      if (i < 2) b += line(x + 198, 107, x + 216, 107);
+    });
+    const glands = [
+      ["Glandula parotidea", "Ohrspeicheldrüse", "vor/unter dem Ohr", "dünnflüssig, viel Amylase"],
+      ["Glandula submandibularis", "Unterkieferspeicheldrüse", "unter dem Unterkiefer", "gemischter Speichel"],
+      ["Glandula sublingualis", "Unterzungenspeicheldrüse", "unter der Zunge", "eher schleimig"]
+    ];
+    b += text(330, 210, "Die drei großen Speicheldrüsen (zusammen ca. 1–1,5 l Speichel/Tag)", "dg-t dg-s dg-b");
+    glands.forEach(([f, d, w, z], i) => {
+      const x = 14 + i * 218;
+      b += box(x, 222, 196, 100, "dg-box dg-accent2") + text(x + 98, 246, f, "dg-t dg-xs dg-b") + text(x + 98, 266, d, "dg-t dg-xs") + text(x + 98, 290, w, "dg-t dg-xs dg-muted") + text(x + 98, 308, z, "dg-t dg-xs dg-muted");
+    });
+    return svg("swallow", 668, 334, b, "Drei Phasen des Schluckakts und die drei großen Speicheldrüsen");
+  },
+
+  villi: () => {
+    let b = text(330, 24, "Oberflächenvergrößerung im Dünndarm", "dg-t dg-b");
+    const cols = [["Kerckring-Falten", "× 3", "Ringfalten der Schleimhaut"], ["Darmzotten (Villi)", "× 10", "mit Kapillaren + Lymphgefäß"], ["Mikrovilli", "× 20", "Bürstensaum jeder Zelle"]];
+    cols.forEach(([t, f, s], i) => {
+      const x = 14 + i * 218;
+      b += box(x, 38, 196, 210, "dg-box dg-soft") + text(x + 98, 62, t, "dg-t dg-s dg-b") + text(x + 98, 236, s, "dg-t dg-xs dg-muted");
+      b += `<rect x="${x + 150}" y="70" width="38" height="22" rx="11" class="dg-box dg-accent"/>` + text(x + 169, 86, f, "dg-t dg-xs dg-b");
+      if (i < 2) b += line(x + 198, 143, x + 216, 143);
+    });
+    b += `<path d="M30,200 Q55,110 80,200 Q105,110 130,200 Q155,110 180,200 L195,200" class="dg-tube dg-thin"/>`;
+    for (let k = 0; k < 4; k++) {
+      const x = 258 + k * 40;
+      b += `<path d="M${x},212 L${x},128 Q${x + 14},104 ${x + 28},128 L${x + 28},212" class="dg-box dg-accent2"/>`;
+      b += `<path d="M${x + 7},210 L${x + 7},132 Q${x + 14},120 ${x + 21},132 L${x + 21},210" class="dg-vessel"/>`;
+      b += `<line x1="${x + 14}" y1="208" x2="${x + 14}" y2="135" class="dg-lymph"/>`;
+    }
+    b += box(478, 140, 140, 72, "dg-box dg-accent2", 4);
+    for (let k = 0; k < 17; k++) b += `<line x1="${484 + k * 8}" y1="140" x2="${484 + k * 8}" y2="116" class="dg-check"/>`;
+    b += text(548, 182, "Darmzelle", "dg-t dg-xs");
+    b += box(14, 262, 640, 50, "dg-box dg-accent") + text(334, 283, "3 × 10 × 20 ≈ 600-fache Fläche (ca. 200 m²) → maximale Resorption", "dg-t dg-s dg-b");
+    b += text(334, 302, "Zucker & Aminosäuren → Blut → Pfortader → Leber   ·   Fette → Lymphe", "dg-t dg-xs");
+    return svg("villi", 668, 322, b, "Falten, Zotten und Mikrovilli vergrößern die Oberfläche etwa 600-fach");
+  },
+
+  pancreas: () => {
+    let b = box(14, 14, 316, 270, "dg-box dg-soft") + text(172, 40, "Exokrin (ca. 98 %)", "dg-t dg-b") + text(172, 60, "Pankreassaft über Gang → Duodenum", "dg-t dg-xs dg-muted");
+    const ex = [["Amylase", "Stärke → Maltose"], ["Lipase", "Fette → Fettsäuren + Glycerin"], ["Trypsin(ogen)", "Eiweiß → Peptide"], ["Chymotrypsin(ogen)", "Eiweiß → Peptide"], ["Bikarbonat", "neutralisiert den sauren Chymus"]];
+    ex.forEach(([e, w], i) => { b += box(28, 74 + i * 40, 288, 32, "dg-box", 8) + text(38, 95 + i * 40, e, "dg-t dg-xs dg-b", "start") + text(306, 95 + i * 40, w, "dg-t dg-xs", "end"); });
+    b += box(342, 14, 316, 270, "dg-box dg-accent2") + text(500, 40, "Endokrin (Langerhans-Inseln)", "dg-t dg-b") + text(500, 60, "Hormone direkt ins Blut", "dg-t dg-xs dg-muted");
+    const en = [["B-Zellen → Insulin", "senkt den Blutzucker ↓", "Glukose in die Zellen"], ["A-Zellen → Glukagon", "erhöht den Blutzucker ↑", "Glykogenabbau in der Leber"]];
+    en.forEach(([h, w, z], i) => { b += box(356, 76 + i * 100, 288, 86, "dg-box", 8) + text(500, 102 + i * 100, h, "dg-t dg-s dg-b") + text(500, 126 + i * 100, w, "dg-t dg-xs") + text(500, 146 + i * 100, z, "dg-t dg-xs dg-muted"); });
+    b += text(336, 312, "Bildungsorte: Amylase – Speicheldrüsen + Pankreas · Lipase, Trypsin, Chymotrypsin – Pankreas", "dg-t dg-xs");
+    b += text(336, 332, "Maltase – Dünndarmschleimhaut · Pepsin(ogen) – Magen (Hauptzellen)", "dg-t dg-xs");
+    return svg("pancreas", 672, 344, b, "Exokrines und endokrines Pankreas mit Enzymen und Hormonen");
+  },
+
+  diabetes: () => {
+    let b = text(334, 24, "Diabetes mellitus – Diagnose (ein Kriterium genügt, Bestätigung nötig)", "dg-t dg-s dg-b");
+    const c = [["HbA1c", "≥ 6,5 %", "(48 mmol/mol)"], ["Nüchtern-Glukose", "≥ 126 mg/dl", "(7,0 mmol/l)"], ["Gelegenheits-Glukose", "≥ 200 mg/dl", "(11,1 mmol/l)"], ["oGTT nach 2 h", "≥ 200 mg/dl", "(11,1 mmol/l)"]];
+    c.forEach(([t, v, m], i) => { const x = 14 + i * 162; b += box(x, 38, 150, 86, "dg-box dg-accent") + text(x + 75, 62, t, "dg-t dg-xs dg-b") + text(x + 75, 90, v, "dg-t dg-b") + text(x + 75, 112, m, "dg-t dg-xs dg-muted"); });
+    b += text(334, 156, "Spätschäden (Folgeerkrankungen)", "dg-t dg-s dg-b");
+    const s = [["Makroangiopathie", "große Gefäße", ["Herzinfarkt", "Schlaganfall", "pAVK"]], ["Mikroangiopathie", "kleine Gefäße", ["Retinopathie (Auge)", "Nephropathie (Niere)", "→ Erblindung, Dialyse"]], ["Neuropathie", "Nerven", ["Kribbeln, Taubheit", "Diabetisches Fußsyndrom", "→ Amputationsgefahr"]]];
+    s.forEach(([t, u, l], i) => {
+      const x = 14 + i * 216;
+      b += box(x, 170, 204, 132, "dg-box dg-soft") + text(x + 102, 194, t, "dg-t dg-s dg-b") + text(x + 102, 214, u, "dg-t dg-xs dg-muted");
+      l.forEach((z, j) => { b += text(x + 102, 240 + j * 20, z, "dg-t dg-xs"); });
+    });
+    return svg("diabetes", 668, 314, b, "Diagnosekriterien und Spätschäden des Diabetes mellitus");
+  },
+
+  ifobt: () => {
+    let b = text(334, 24, "Körperliche Untersuchung des Bauchs", "dg-t dg-s dg-b");
+    ["Anamnese", "Inspektion", "Auskultation", "Perkussion", "Palpation"].forEach((t, i) => {
+      const x = 14 + i * 130;
+      b += box(x, 36, 116, 36, i ? "dg-box dg-soft" : "dg-box dg-accent", 18) + text(x + 58, 59, t, "dg-t dg-xs dg-b");
+      if (i < 4) b += line(x + 117, 54, x + 128, 54);
+    });
+    b += text(334, 92, "am Bauch: erst abhören, dann klopfen und tasten (Darmgeräusche nicht verfälschen)", "dg-t dg-xs dg-muted");
+    b += text(334, 128, "iFOB-Test (immunologischer Stuhltest auf verborgenes Blut) – keine Diät nötig", "dg-t dg-s dg-b");
+    const st = [["1", "Röhrchen", "beschriften"], ["2", "Stuhl auffangen,", "nicht aus dem Wasser"], ["3", "an mehreren Stellen", "einstechen"], ["4", "Stäbchen zurück,", "fest verschließen"], ["5", "rasch in die Praxis,", "bis dahin kühl"]];
+    st.forEach(([n, a, c], i) => {
+      const x = 14 + i * 130;
+      b += box(x, 142, 116, 86, "dg-box dg-accent2") + `<circle cx="${x + 58}" cy="164" r="12" class="dg-mark"/>` + text(x + 58, 169, n, "dg-t dg-xs dg-b") + text(x + 58, 196, a, "dg-t dg-xs") + text(x + 58, 214, c, "dg-t dg-xs");
+      if (i < 4) b += line(x + 117, 185, x + 128, 185);
+    });
+    b += box(14, 244, 636, 52, "dg-box dg-accent") + text(334, 266, "Positiv → Abklärung durch Koloskopie (Darmspiegelung)", "dg-t dg-s dg-b");
+    b += text(334, 286, "Anspruch (seit 04/2025): Frauen und Männer ab 50 – iFOBT alle 2 Jahre oder 2 Koloskopien im Abstand von 10 Jahren", "dg-t dg-xs");
+    return svg("ifobt", 664, 306, b, "Reihenfolge der Bauchuntersuchung und Ablauf des iFOB-Tests");
   }
 };
 
