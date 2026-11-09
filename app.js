@@ -141,6 +141,31 @@ const subjects = {
           "Typische Gerätezuordnungen aus der Prüfungsseite: Repeater auf Schicht 1, Switch auf 2, Router auf 3. Eine Firewall kann – je nachdem, was sie prüft – auf Schicht 3 und/oder 4 arbeiten."
         ],
         example: "Merksatz von unten nach oben: „Bitte Suche Vernünftige Transporte Seit Dem Abend“ – Bitübertragung, Sicherung, Vermittlung, Transport, Sitzung, Darstellung, Anwendung.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l1-osi-table",
+            title: "Arbeitsblatt: Schichten ordnen",
+            prompt: "Trage zu jeder Nummer den Namen der OSI-Schicht ein.",
+            rows: [
+              { label: "Schicht 1", accepted: ["Bitübertragung", "Bitübertragungsschicht"], expected: "Bitübertragung" },
+              { label: "Schicht 2", accepted: ["Sicherung", "Sicherungsschicht"], expected: "Sicherung" },
+              { label: "Schicht 3", accepted: ["Vermittlung", "Vermittlungsschicht"], expected: "Vermittlung" },
+              { label: "Schicht 4", accepted: ["Transport", "Transportschicht"], expected: "Transport" },
+              { label: "Schicht 5", accepted: ["Sitzung", "Sitzungsschicht"], expected: "Sitzung" },
+              { label: "Schicht 6", accepted: ["Darstellung", "Darstellungsschicht"], expected: "Darstellung" },
+              { label: "Schicht 7", accepted: ["Anwendung", "Anwendungsschicht"], expected: "Anwendung" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l1-osi-writing",
+            title: "Erkläre es selbst: Daten einkapseln",
+            prompt: "Beschreibe in zwei bis vier Sätzen, was beim Senden mit den Daten auf dem Weg durch die Schichten geschieht.",
+            modelAnswer: "Die Anwendungsdaten werden beim Senden schrittweise an die darunterliegenden Schichten übergeben. Jede Schicht ergänzt die für ihre Aufgabe benötigten Steuerinformationen, zum Beispiel Transport-, IP- und Ethernet-Informationen. Beim Empfänger werden diese Informationen schichtweise ausgewertet und entfernt.",
+            criteria: ["Daten gehen beim Senden durch mehrere Schichten.", "Schichten ergänzen passende Steuerinformationen.", "Beim Empfänger werden die Informationen wieder ausgewertet."]
+          }
+        ],
         practice: {
           id: "net-l1-practice",
           prompt: "Ein Router leitet Pakete anhand ihrer IP-Zieladresse weiter. Auf welcher OSI-Schicht arbeitet diese Vermittlungsaufgabe?",
@@ -156,15 +181,41 @@ const subjects = {
         recap: ["Die OSI-Schichten laufen von 1 (Bitübertragung) bis 7 (Anwendung).", "Switch: typisch Schicht 2; Router/IP: typisch Schicht 3.", "Ports sind Schicht 4; Geräte können Funktionen mehrerer Schichten verbinden."]
       },
       {
-        title: "Adressen: MAC, IP & Port",
-        goal: "Du kannst MAC-, IP- und Portadressen unterscheiden und das Standardgateway im lokalen Netz erklären.",
-        source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 1–3.",
+        title: "Ethernet- und Internetprotokoll",
+        goal: "Du kannst Ethernet-Rahmen und IPv4-Paket unterscheiden, wichtige Felder zuordnen und den Weg zu einem Internetziel erklären.",
+        source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 1–4.",
         explanation: [
-          "Eine MAC-Adresse adressiert eine Netzwerkschnittstelle auf dem lokalen Übertragungsabschnitt. Eine IP-Adresse adressiert ein Gerät bzw. eine IP-Schnittstelle für die Weiterleitung zwischen Netzen.",
-          "Eine Portnummer ordnet Daten einer Anwendung bzw. einem Dienst auf einem Endgerät zu. TCP oder UDP transportiert die Portnummern; die IP-Schicht transportiert IP-Adressen.",
-          "Wenn ein Rechner ein Ziel außerhalb des eigenen lokalen Netzes erreichen will, schickt er den Ethernet-Rahmen zunächst an die MAC-Adresse des Standardgateways (meist des Routers). Die IP-Zieladresse bleibt die Adresse des entfernten Ziels."
+          "Ethernet beschreibt die Übertragung auf dem lokalen Netzabschnitt. Ein Ethernet-Rahmen enthält unter anderem Ziel-MAC-Adresse, Quell-MAC-Adresse und ein Typfeld. Bei IPv4 steht im Typfeld 0x0800; der Rahmen transportiert dann das IPv4-Paket.",
+          "Das Internetprotokoll (IP) vermittelt Pakete zwischen Netzen. Im IPv4-Header stehen unter anderem Quell- und Ziel-IP-Adresse sowie das Feld „Protocol“, das das nächste Protokoll wie TCP (6) oder UDP (17) kennzeichnet.",
+          "Die Adressen erfüllen unterschiedliche Aufgaben: MAC-Adressen bringen einen Rahmen zum nächsten Gerät auf dem lokalen Abschnitt; IP-Adressen identifizieren Quelle und Ziel für die Weiterleitung über Netze hinweg. TCP- oder UDP-Portnummern ordnen den Verkehr einem Dienst auf dem Zielgerät zu.",
+          "Bei einem entfernten Ziel bleibt die IP-Zieladresse die des Servers. Der erste Ethernet-Rahmen wird dagegen an die MAC-Adresse des lokalen Standardgateways geschickt. An jedem Router wird der Link-Layer-Rahmen für den nächsten Abschnitt neu erstellt.",
+          "Die Prüfungsseite ordnet Ethernet als asynchron ein: Die Übertragung richtet sich nicht nach einem gemeinsamen zentralen Takt, den alle Stationen teilen."
         ],
-        example: "Für einen Brief ins Ausland: Die IP-Adresse ähnelt der Zieladresse auf dem Brief. Die MAC-Adresse ist wie die Adresse der nächsten örtlichen Sortierstelle – dem Gateway – auf dem ersten Teilstück.",
+        example: "Ethernet-Rahmen [Ziel-/Quell-MAC, Typ 0x0800] → IPv4-Paket [Quell-/Ziel-IP, Protocol 6] → TCP-Segment [Quell-/Zielport] → Anwendungsdaten. Das ist eine vereinfachte Kapselung; auf dem Rückweg werden die Header ausgewertet.",
+        supplement: "Die Zuordnung Ethernet-Typ 0x0800 zu IPv4 und die Kapselung des IP-Datagramms in Ethernet sind in RFC 894 beschrieben. Die genaue Feldstruktur des IPv4-Headers wird im Vertiefungslevel behandelt.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l2-headers",
+            title: "Arbeitsblatt: Header zuordnen",
+            prompt: "Ergänze die Tabelle. Achte darauf, welche Adressen auf dem lokalen Abschnitt und welche Ende-zu-Ende verwendet werden.",
+            rows: [
+              { label: "Ethernet-Zieladresse", accepted: ["MAC-Adresse", "MAC"], expected: "MAC-Adresse des nächsten Geräts auf diesem LAN-Abschnitt" },
+              { label: "Ethernet-Typ für IPv4", accepted: ["0x0800", "0800", "2048"], expected: "0x0800 (IPv4)" },
+              { label: "IPv4-Zieladresse bei einem Internetserver", accepted: ["IP-Adresse des servers", "IP-Adresse des entfernten servers", "server-ip", "ip-zieladresse des servers", "ziel-ip des servers"], expected: "IP-Adresse des entfernten Servers" },
+              { label: "IP-Feld Protocol für TCP", accepted: ["6", "tcp"], expected: "6 (TCP)" },
+              { label: "TCP/UDP-Port", accepted: ["portnummer", "port"], expected: "Portnummer des Dienstes auf dem Zielgerät" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l2-hop-writing",
+            title: "Erkläre es selbst: erster Hop zum Internet",
+            prompt: "Ein PC ruft einen Server außerhalb seines LANs auf. Erkläre, welche Ziel-IP und welche Ziel-MAC im ersten Paket/Rahmen verwendet werden – und warum sie verschieden sind.",
+            modelAnswer: "Die Ziel-IP im IPv4-Paket ist die IP-Adresse des entfernten Servers und bleibt für dieses Ziel bestehen. Die Ziel-MAC im ersten Ethernet-Rahmen ist die MAC-Adresse des lokalen Standardgateways, weil Ethernet nur bis zum nächsten Gerät auf dem lokalen Abschnitt zustellt. Der Router leitet das IP-Paket weiter und verpackt es für den nächsten Abschnitt neu.",
+            criteria: ["IP-Ziel bleibt der entfernte Server.", "Erster Ethernet-Rahmen geht an die Gateway-MAC.", "Router verpackt für den nächsten Netzabschnitt neu."]
+          }
+        ],
         practice: {
           id: "net-l2-practice",
           prompt: "Ein PC sendet an einen Internetserver außerhalb des privaten LANs. Welche Ziel-MAC-Adresse steht im ersten Ethernet-Rahmen?",
@@ -175,13 +226,15 @@ const subjects = {
         test: [
           { id: "net-l2-q1", prompt: "Welche Adresse gehört zur Ethernet-Sicherungsschicht?", options: ["MAC-Adresse", "IP-Adresse", "TCP-Port"], answer: 0, explanation: "Ethernet verwendet Quell- und Ziel-MAC-Adressen im Rahmen." },
           { id: "net-l2-q2", prompt: "Welche Information leitet ein Router zwischen IP-Netzen weiter?", options: ["IP-Zieladresse", "Ethernet-Quell-MAC als Endziel", "TCP-Sequenznummer als Netzadresse"], answer: 0, explanation: "Router treffen ihre Weiterleitungsentscheidung anhand der IP-Adresse." },
-          { id: "net-l2-q3", prompt: "Welche Ziel-MAC verwendet der PC zunächst für einen Server außerhalb des LANs?", options: ["Die des Standardgateways", "Die des Servers", "Es gibt keine MAC-Adresse"], answer: 0, explanation: "Im lokalen Netz wird der Rahmen an das Standardgateway adressiert." }
+          { id: "net-l2-q3", prompt: "Welche Ziel-MAC verwendet der PC zunächst für einen Server außerhalb des LANs?", options: ["Die des Standardgateways", "Die des Servers", "Es gibt keine MAC-Adresse"], answer: 0, explanation: "Im lokalen Netz wird der Rahmen an das Standardgateway adressiert." },
+          { id: "net-l2-q4", type: "short", prompt: "Welcher EtherType-Wert kennzeichnet IPv4 in Ethernet?", accepted: ["0x0800", "0800", "2048"], expected: "0x0800", explanation: "RFC 894 verwendet den Ethernet-Typwert 0x0800 für IPv4." },
+          { id: "net-l2-q5", prompt: "Wie ordnet die Prüfungsseite Ethernet ein?", options: ["Asynchron", "Synchron mit gemeinsamem Bustakt", "Nur zeitgesteuert durch TCP"], answer: 0, explanation: "Die Prüfungsseite erwartet „asynchron“: Ethernet-Stationen teilen keinen gemeinsamen zentralen Bustakt." }
         ],
-        recap: ["MAC = lokaler Ethernet-Abschnitt.", "IP = Weiterleitung zwischen Netzen.", "Port = Anwendung/Dienst auf dem Endgerät.", "Für ein entferntes Ziel geht der erste Ethernet-Rahmen an die Gateway-MAC."]
+        recap: ["MAC = lokaler Ethernet-Abschnitt.", "IP = Weiterleitung zwischen Netzen.", "Port = Anwendung/Dienst auf dem Endgerät.", "Für ein entferntes Ziel geht der erste Ethernet-Rahmen an die Gateway-MAC.", "Die Prüfungsseite ordnet Ethernet als asynchron ein."]
       },
       {
-        title: "ARP, NDP & Gateway",
-        goal: "Du kannst erklären, wie ARP eine IPv4-Adresse einer lokalen MAC-Adresse zuordnet und wozu IPv6 NDP dient.",
+        title: "ARP-Protokoll & Gateway",
+        goal: "Du kannst ARP-Request und Reply erklären und begründen, warum für ein entferntes Ziel zuerst die Gateway-MAC gebraucht wird.",
         source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 2.",
         explanation: [
           "Kennt ein IPv4-Rechner die Ziel-IP im lokalen Netz, aber nicht die zugehörige MAC-Adresse, fragt er per ARP-Request im lokalen Netz nach. Die Anfrage wird lokal verbreitet; das Gerät mit der gesuchten IPv4-Adresse antwortet mit seiner MAC-Adresse.",
@@ -190,6 +243,29 @@ const subjects = {
         ],
         example: "Zum Nachbargerät im selben LAN fragt der Rechner nach dessen MAC. Zum Server im Internet fragt er nach der MAC des Routers, der das Paket als Nächstes weiterleitet.",
         supplement: "Vertiefung anhand der Standards: ARP ist in RFC 826 beschrieben; IPv6 Neighbor Discovery in RFC 4861. Die Protokolldokumente sind in den Quellen am Seitenende verlinkt.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l3-arp-table",
+            title: "Arbeitsblatt: ARP-Ablauf",
+            prompt: "Ein PC will 192.168.1.20 im selben LAN erreichen und kennt die MAC-Adresse noch nicht. Ergänze die Tabelle.",
+            rows: [
+              { label: "Anfrage: gesuchte Protokolladresse", accepted: ["192.168.1.20"], expected: "192.168.1.20 (IPv4-Adresse des Ziels)" },
+              { label: "Anfrage: Ziel-MAC im Ethernet-Rahmen", accepted: ["ff:ff:ff:ff:ff:ff", "ff-ff-ff-ff-ff-ff", "broadcast", "broadcast-mac"], expected: "Broadcast-MAC FF:FF:FF:FF:FF:FF" },
+              { label: "Antwort: wer antwortet?", accepted: ["192.168.1.20", "ziel", "der rechner mit 192.168.1.20", "zielrechner"], expected: "Der Rechner, dem 192.168.1.20 gehört" },
+              { label: "Antwort: welche Zuordnung wird gelernt?", accepted: ["ip zu mac", "ipv4 zu mac", "ipv4-adresse zu mac-adresse", "192.168.1.20 zu mac", "ip-adresse zu mac-adresse"], expected: "IPv4-Adresse → MAC-Adresse" },
+              { label: "Entferntes Internetziel: wessen MAC wird gesucht?", accepted: ["gateway", "router", "standardgateway", "gateway-mac", "router-mac", "mac des standardgateways", "mac-adresse des routers", "mac-adresse des gateways"], expected: "MAC-Adresse des nächsten Routers/Standardgateways" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l3-arp-writing",
+            title: "Erkläre es selbst: ARP-Request und Reply",
+            prompt: "Beschreibe den Ablauf vom unbekannten Nachbarn bis zum Versand des Ethernet-Rahmens. Erkläre auch, warum ARP nicht den Internetserver direkt auflöst.",
+            modelAnswer: "Der Rechner sendet im lokalen Netz einen ARP-Request als Broadcast und fragt nach der MAC-Adresse zur IPv4-Adresse des Nachbarn. Der Rechner mit dieser IPv4-Adresse antwortet mit seiner MAC-Adresse; der Absender kann die Zuordnung im ARP-Cache speichern. Für ein entferntes Ziel wird anhand der IP-Route die MAC-Adresse des nächsten Routers benötigt, nicht die MAC des entfernten Servers.",
+            criteria: ["ARP-Request wird lokal als Broadcast gesendet.", "Zielrechner antwortet mit seiner MAC-Adresse.", "Für entfernte Ziele wird die Gateway-MAC aufgelöst."]
+          }
+        ],
         practice: {
           id: "net-l3-practice",
           prompt: "Der Rechner kennt die IPv4-Adresse eines Nachbarn im selben LAN, aber nicht dessen MAC. Was geschieht?",
@@ -200,70 +276,248 @@ const subjects = {
         test: [
           { id: "net-l3-q1", prompt: "Wofür wird ARP in einem IPv4-LAN verwendet?", options: ["IPv4-Adresse zu lokaler MAC-Adresse auflösen", "Portnummer in IP-Adresse umwandeln", "DNS-Namen verschlüsseln"], answer: 0, explanation: "ARP ordnet einer Protokolladresse (zum Beispiel IPv4) eine lokale Ethernet-Adresse zu." },
           { id: "net-l3-q2", prompt: "Was kann nach einer ARP-Anfrage im ARP-Cache stehen?", options: ["Die Zuordnung von IPv4-Adresse zu MAC-Adresse", "Die Liste aller Webseiten", "Das Passwort des Routers"], answer: 0, explanation: "Der Cache hält ermittelte Nachbarzuordnungen zeitlich begrenzt fest." },
-          { id: "net-l3-q3", prompt: "Welches Verfahren erfüllt für IPv6 die Nachbarerkennung?", options: ["NDP / Neighbor Discovery", "ARP direkt über IPv6", "FTP"], answer: 0, explanation: "IPv6 verwendet Neighbor Discovery (NDP), unter anderem zur Ermittlung von Nachbarn und Link-Layer-Adressen." }
+          { id: "net-l3-q3", prompt: "Welches Verfahren erfüllt für IPv6 die Nachbarerkennung?", options: ["NDP / Neighbor Discovery", "ARP direkt über IPv6", "FTP"], answer: 0, explanation: "IPv6 verwendet Neighbor Discovery (NDP), unter anderem zur Ermittlung von Nachbarn und Link-Layer-Adressen." },
+          { id: "net-l3-q4", type: "short", prompt: "Wie heißt die ARP-Nachricht, mit der ein Gerät die MAC-Adresse zu einer IPv4-Adresse erfragt?", accepted: ["arp request", "request", "arp-anfrage", "anfrage"], expected: "ARP-Request", explanation: "Der Absender sendet einen ARP-Request; das gesuchte Gerät antwortet üblicherweise mit einem ARP-Reply." }
         ],
         recap: ["ARP: IPv4-Adresse → lokale MAC-Adresse.", "Request fragt im lokalen Netz; Reply liefert die Zuordnung.", "IPv6 nutzt NDP über ICMPv6; entfernte Ziele werden zunächst an das Gateway übergeben."]
       },
       {
-        title: "TCP, UDP & Ethernet",
-        goal: "Du kannst TCP und UDP unterscheiden und typische Dienste sowie CSMA/CA einordnen.",
+        title: "CSMA/CD und CSMA/CA",
+        goal: "Du kannst die Zugriffsverfahren von klassischem gemeinsamem Ethernet und WLAN vergleichen und TCP/UDP-Anwendungen passend einordnen.",
         source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 2 und S. 4.",
         explanation: [
-          "TCP ist verbindungsorientiert und bietet unter anderem geordnete Übertragung sowie Wiederholungen bei fehlenden Daten. UDP ist verbindungslos und garantiert selbst weder Reihenfolge noch Zustellung.",
-          "TCP nutzt Sequenznummern, Flusskontrolle und Wiederholungen. UDP hat diese eingebauten Zustell- und Reihenfolgegarantien nicht. Klassische Zuordnungen aus der Prüfungsseite: HTTP, FTP und SSH zu TCP; VoIP, DHCP und viele Online-Spiele zu UDP. Das sind typische Unterrichtsbeispiele, keine Aussage, dass ein Dienst in jeder Implementierung ausschließlich dieses Transportprotokoll nutzt.",
-          "Für Echtzeitanwendungen kann UDP nützlich sein, weil nicht erst auf Wiederholungen gewartet werden muss. Die Anwendung muss passende Zuverlässigkeit selbst berücksichtigen.",
-          "CSMA/CA bedeutet „Carrier Sense Multiple Access with Collision Avoidance“. Es ist ein Zugriffsverfahren in WLANs: Stationen hören den Funkkanal ab und versuchen, Kollisionen durch Warten und Koordination zu vermeiden. RTS/CTS kann optional helfen, etwa bei versteckten Stationen.",
-          "Ethernet im üblichen lokalen Netz arbeitet asynchron; es gibt nicht einen gemeinsamen Takt, an dem alle Datenbits ausgerichtet werden."
+          "CSMA bedeutet „Carrier Sense Multiple Access“: Geräte prüfen das Medium, bevor sie senden. CD („Collision Detection“) gehört zum klassischen gemeinsam genutzten, halbduplexen Ethernet: Während des Sendens wird eine Kollision erkannt; die Stationen stoppen und versuchen es nach einer zufälligen Wartezeit erneut.",
+          "CA („Collision Avoidance“) wird im WLAN verwendet. Weil ein Funkgerät während des eigenen Sendens Kollisionen nicht zuverlässig wie bei einem Kabel erkennen kann, versucht WLAN sie durch Abhören, Warten und zufällige Backoff-Zeiten zu vermeiden. Bestätigungen und optionale RTS/CTS-Reservierungen helfen in passenden Situationen.",
+          "Wichtig für die Einordnung: CSMA/CD ist kein Verfahren, das moderne, geschaltete Vollduplex-Ethernet-Verbindungen normalerweise für Kollisionen brauchen. CSMA/CA und CSMA/CD regeln den Zugriff auf das Übertragungsmedium; sie sind nicht die Transportprotokolle TCP und UDP.",
+          "Eine TCP- oder UDP-Verbindung nutzt darunter IP und für den lokalen Abschnitt Ethernet oder WLAN. Die Zugriffsmethode des Mediums und die Zuverlässigkeit des Transports sind daher zwei verschiedene Fragestellungen."
         ],
-        example: "Eine Dateiübertragung profitiert von TCPs Reihenfolge und Wiederholung. Bei einem Echtzeit-Audiostrom kann eine verspätete Wiederholung weniger sinnvoll sein als das Weiterlaufen mit dem nächsten Datenpaket.",
-        supplement: "Die Prüfungsseite enthält bei der Frage „synchron oder asynchron“ eine falsche Schülerantwort, die mit 0 Punkten bewertet wurde. Für die Wiederholung gilt: Ethernet ist asynchron. Die handschriftliche Antwort zu CSMA/CA beschreibt RTS/CTS ungenau; maßgeblich ist die Erklärung oben.",
+        example: "Geteiltes halbduplexes Ethernet: Gerät sendet, erkennt eine Kollision und versucht es nach Backoff erneut (CSMA/CD). WLAN: Station hört den Kanal ab, wartet bei Belegung und nutzt Backoff (CSMA/CA).",
+        supplement: "Die PDF behandelt CSMA/CA und Ethernet. Die genaue Abgrenzung von klassischem CSMA/CD zu heutigem geschaltetem Vollduplex-Ethernet ist eine fachliche Vertiefung. Die Zuordnung von HTTP/FTP/SSH zu TCP und VoIP/DHCP zu UDP sind typische Beispiele, keine ausnahmslose Regel für jede Implementierung.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l4-csma-table",
+            title: "Arbeitsblatt: CSMA/CD und CSMA/CA vergleichen",
+            prompt: "Ergänze für jedes Verfahren, wo es typischerweise vorkommt und wie es mit Kollisionen umgeht.",
+            rows: [
+              { label: "CSMA/CD: typischer Einsatz", accepted: ["klassisches ethernet", "gemeinsam genutztes halbduplex ethernet", "halbduplex ethernet"], expected: "Klassisches gemeinsam genutztes, halbduplexes Ethernet" },
+              { label: "CSMA/CD: Umgang mit Kollisionen", accepted: ["erkennen und erneut senden", "kollision erkennen, abbrechen und nach zufallszeit erneut senden", "kollision erkennen und nach backoff erneut versuchen", "erkennen"], expected: "Kollision während des Sendens erkennen, abbrechen und nach Backoff erneut versuchen" },
+              { label: "CSMA/CA: typischer Einsatz", accepted: ["wlan", "wifi", "wireless lan"], expected: "WLAN" },
+              { label: "CSMA/CA: Grundidee", accepted: ["kollisionen vermeiden", "vorher lauschen und warten", "warten und zufallszeit", "collision avoidance"], expected: "Kollisionen durch Abhören, Warten und Backoff möglichst vermeiden" },
+              { label: "Modernes geschaltetes Vollduplex-Ethernet: CSMA/CD nötig?", accepted: ["nein", "nein, normalerweise nicht", "nicht nötig"], expected: "Nein, normalerweise nicht" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l4-csma-writing",
+            title: "Erkläre es selbst: Warum CD oder CA?",
+            prompt: "Erkläre in eigenen Worten, warum WLAN Kollisionen eher vermeiden muss, während klassisches CSMA/CD sie während des Sendens erkennen kann.",
+            modelAnswer: "Bei einem Funkgerät überlagert das eigene Sendesignal den Empfang, deshalb kann es eine Kollision während des Sendens nicht zuverlässig wie ein Kabel-Ethernet erkennen. WLAN hört vor dem Senden ab und verwendet Wartezeiten/Backoff, um Kollisionen zu vermeiden. Klassisches gemeinsames halbduplexes Ethernet kann eine Kollision während des Sendens erkennen und danach den Sendeversuch wiederholen.",
+            criteria: ["Eigenes Funksignal erschwert das gleichzeitige Erkennen einer Kollision.", "WLAN verwendet Kollisionsvermeidung (CA).", "Klassisches Ethernet kann Kollisionen erkennen (CD)."]
+          }
+        ],
         practice: {
           id: "net-l4-practice",
-          prompt: "Bei einer Dateiübertragung soll die Reihenfolge stimmen und fehlende Daten sollen erneut gesendet werden. Was passt besser?",
-          options: ["TCP", "UDP", "ARP"],
-          answer: 0,
-          explanation: "TCP bietet geordnete, zuverlässige Datenübertragung mit Wiederholungen. UDP stellt diese Garantien selbst nicht bereit."
+          prompt: "Zwei WLAN-Geräte wollen gleichzeitig senden. Welches Verfahren versucht Kollisionen zu vermeiden?",
+          options: ["CSMA/CD", "CSMA/CA", "ARP"],
+          answer: 1,
+          explanation: "WLAN nutzt CSMA/CA: Die Stationen hören den Kanal ab und verwenden Warte- und Backoff-Zeiten, um Kollisionen möglichst zu vermeiden."
         },
         test: [
-          { id: "net-l4-q1", prompt: "Welche Aussage zu UDP stimmt?", options: ["UDP garantiert die geordnete Zustellung.", "UDP ist verbindungslos und garantiert die Zustellung selbst nicht.", "UDP ersetzt IP-Adressen."], answer: 1, explanation: "UDP bietet einen verbindungslosen Datagrammtransport ohne eigene Zustell- oder Reihenfolgegarantie." },
-          { id: "net-l4-q2", prompt: "Wofür steht das „CA“ in CSMA/CA?", options: ["Collision Avoidance", "Connection Address", "Carrier Assignment"], answer: 0, explanation: "CA steht für Collision Avoidance – Kollisionsvermeidung." },
-          { id: "net-l4-q3", prompt: "Ethernet wird in der Prüfungsfrage als … eingeordnet.", options: ["asynchron", "synchron", "zeitgesteuert durch einen gemeinsamen Bus-Takt"], answer: 0, explanation: "Das übliche Ethernet hat keinen gemeinsamen Taktgeber für alle Stationen und gilt hier als asynchron." },
-          { id: "net-l4-q4", prompt: "Welche Zuordnung passt zu den klassischen Beispielen aus der Prüfungsseite?", options: ["HTTP, FTP und SSH zu TCP", "ARP zu UDP", "VoIP und Online-Spiele zu TCP in jedem Fall"], answer: 0, explanation: "Die Prüfungsseite ordnet HTTP, FTP und SSH TCP zu; VoIP und Online-Spiele sind typische UDP-Beispiele. Das sind verbreitete Zuordnungen, keine Aussage über ausnahmslose Implementierungen." }
+          { id: "net-l4-q1", prompt: "Wofür steht CD in CSMA/CD?", options: ["Collision Detection", "Connection Delivery", "Carrier Datagram"], answer: 0, explanation: "CD steht für Collision Detection: Kollisionserkennung beim klassischen gemeinsam genutzten Ethernet." },
+          { id: "net-l4-q2", prompt: "Was ist die Grundidee von CSMA/CA?", options: ["Kollisionen möglichst vermeiden", "Kollisionen erst nach TCP erkennen", "IP-Adressen im WLAN verschlüsseln"], answer: 0, explanation: "CA steht für Collision Avoidance. WLAN versucht Kollisionen durch Abhören und Backoff zu vermeiden." },
+          { id: "net-l4-q3", prompt: "Wird CSMA/CD für eine moderne geschaltete Vollduplex-Ethernet-Verbindung normalerweise benötigt?", options: ["Nein", "Ja, für jede Verbindung", "Nur wenn IPv4 verwendet wird"], answer: 0, explanation: "Bei geschaltetem Vollduplex-Ethernet gibt es keinen gemeinsamen Kollisionsbereich wie bei klassischem halbduplexem Ethernet." },
+          { id: "net-l4-q4", type: "short", prompt: "Welches Verfahren wird typischerweise im WLAN eingesetzt? (Abkürzung)", accepted: ["CSMA/CA", "CA"], expected: "CSMA/CA", explanation: "WLAN nutzt CSMA/CA (Collision Avoidance)." }
         ],
-        recap: ["TCP: verbindungsorientiert, geordnet, Wiederholungen.", "UDP: verbindungslos, keine eigene Zustellgarantie.", "CSMA/CA: WLAN-Zugriff mit Kollisionsvermeidung.", "Ethernet ist asynchron."]
+        recap: ["CSMA/CD: Kollisionserkennung beim klassischen geteilten Halbduplex-Ethernet.", "CSMA/CA: Kollisionsvermeidung im WLAN.", "Mediumzugriff (CSMA) ist nicht dasselbe wie zuverlässiger Transport (TCP)."]
       },
       {
-        title: "Pakete lesen & Fehler finden",
-        goal: "Du kannst eine einfache Subnetzfrage lösen, einen Paketmitschnitt schichtenweise lesen und Dämpfung richtig deuten.",
-        source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 3–4.",
+        title: "TCP und UDP",
+        goal: "Du kannst TCP und UDP anhand von Verbindungsaufbau, Zuverlässigkeit und typischen Einsatzfällen vergleichen.",
+        source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 2 und S. 4.",
         explanation: [
-          "Eine Subnetzmaske 255.255.255.192 entspricht /26. Damit bleiben 6 Bits für Hostadressen: 2⁶ = 64 Adressen insgesamt. Bei einem gewöhnlichen IPv4-Subnetz sind Netzwerk- und Broadcastadresse nicht an einzelne Hosts vergebbar, also bleiben 62 nutzbare Hostadressen.",
-          "Lies einen Paketmitschnitt von außen nach innen: Im Ethernet-Header stehen Ziel- und Quell-MAC sowie der Typ des Inhalts. Im IP-Header stehen IP-Adressen und das Transportprotokoll. TCP oder UDP enthält anschließend Quell- und Zielport.",
-          "Ein traceroute zeigt die Router-Hops auf dem Weg zum Ziel und Antwortzeiten. Bei Spannungspegeln gilt für gleiche Impedanz: 20 dB Spannungsdämpfung bedeutet ein Spannungsverhältnis von 10:1; am Empfang kommen 10 % der ursprünglichen Spannung an, also 90 % weniger."
+          "TCP ist verbindungsorientiert. Vor dem Datenaustausch wird eine Verbindung aufgebaut; Sequenznummern, Bestätigungen und Wiederholungen helfen, Daten geordnet und zuverlässig an die Anwendung zu übergeben. Flusskontrolle stimmt die Senderate auf den Empfänger ab.",
+          "UDP ist verbindungslos und transportiert einzelne Datagramme. Es garantiert selbst weder Zustellung noch Reihenfolge und wiederholt verlorene Daten nicht automatisch. Die Anwendung kann dadurch selbst entscheiden, wie sie mit Verlust oder Verspätung umgeht.",
+          "Beide Protokolle nutzen Portnummern, um Daten einem Dienst auf einem Endgerät zuzuordnen. Typische Beispiele aus dem Unterricht: HTTP/FTP/SSH über TCP sowie DHCP/VoIP über UDP. Das sind typische Zuordnungen, nicht zwingend für jede Variante eines Dienstes."
         ],
-        example: "Im Aufgaben-Mitschnitt ist 0x0800 der Ethernet-Typ für IPv4; das IP-Feld 0x11 bedeutet UDP; der Zielport 0x0035 ist dezimal 53 (DNS). Das ist eine Leseübung nach den Headern, kein allgemeines Versprechen, dass jeder Port nur einem Dienst dient.",
+        example: "Bei einer Datei ist es wichtig, dass fehlende Daten erneut übertragen und korrekt geordnet werden – TCP passt gut. Bei einem Echtzeitgespräch kann es besser sein, aktuelle Sprachdaten weiterzusenden, statt verspätete Daten nachzuliefern – UDP kann passen.",
+        supplement: "Die PDF nennt typische Protokoll- und Dienstzuordnungen. TCP (RFC 9293) und UDP (RFC 768) sind in den Quellen am Seitenende verlinkt.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l5-transport-table",
+            title: "Arbeitsblatt: TCP oder UDP?",
+            prompt: "Ordne den typischen Fall zu und nenne jeweils den entscheidenden Grund.",
+            rows: [
+              { label: "Datei vollständig und geordnet übertragen", accepted: ["tcp", "tcp wegen zuverlässigkeit", "tcp, zuverlässige und geordnete übertragung", "tcp wegen wiederholungen", "tcp geordnete übertragung und wiederholungen"], expected: "TCP – geordnete Übertragung und Wiederholungen" },
+              { label: "Echtzeit-Audio: alte verspätete Daten sind wenig nützlich", accepted: ["udp", "udp, keine wiederholungen", "udp wegen geringerem overhead", "udp, anwendung entscheidet", "udp keine automatische wiederholung die anwendung entscheidet"], expected: "UDP – keine automatische Wiederholung; die Anwendung entscheidet" },
+              { label: "Portnummern gehören zu welcher Schicht?", accepted: ["transport", "transportschicht", "schicht 4", "4"], expected: "Transportschicht (OSI-Schicht 4)" },
+              { label: "Garantiert UDP selbst die Zustellung?", accepted: ["nein", "nein, keine zustellgarantie", "nein, keine garantie"], expected: "Nein" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l5-transport-writing",
+            title: "Erkläre es selbst: Transport passend wählen",
+            prompt: "Eine App überträgt erst eine Datei und danach einen Live-Audiostream. Begründe, welches Transportprotokoll jeweils typischerweise passt und worin der Zielkonflikt liegt.",
+            modelAnswer: "Für die Datei passt typischerweise TCP, weil Reihenfolge und zuverlässige Zustellung wichtig sind und verlorene Daten erneut gesendet werden können. Für Live-Audio kann UDP passen, weil eine verspätete Wiederholung oft weniger nützlich ist als aktuelle Daten. UDP garantiert die Zustellung nicht; falls nötig muss die Anwendung selbst reagieren.",
+            criteria: ["Datei: TCP wegen Reihenfolge/Zuverlässigkeit.", "Live-Audio: UDP kann wegen Zeitnähe sinnvoll sein.", "UDP hat selbst keine Zustellgarantie."]
+          }
+        ],
         practice: {
           id: "net-l5-practice",
+          prompt: "Welche Transportwahl passt typischerweise besser, wenn fehlende Daten einer Datei erneut übertragen werden sollen?",
+          options: ["TCP", "UDP", "ARP"],
+          answer: 0,
+          explanation: "TCP bietet Zuverlässigkeitsmechanismen wie Bestätigungen und Wiederholungen; UDP stellt diese selbst nicht bereit."
+        },
+        test: [
+          { id: "net-l5-q1", prompt: "Welche Eigenschaft bietet TCP, die UDP selbst nicht garantiert?", options: ["Geordnete zuverlässige Zustellung mit Wiederholungen", "IPv4-Adressierung", "Ethernet-MAC-Adressen"], answer: 0, explanation: "TCP bietet geordnete, zuverlässige Datenübertragung; UDP garantiert die Zustellung und Reihenfolge selbst nicht." },
+          { id: "net-l5-q2", prompt: "Wozu dienen TCP- und UDP-Portnummern?", options: ["Daten einem Dienst/Prozess zuordnen", "MAC-Adressen ersetzen", "Router im Internet nummerieren"], answer: 0, explanation: "Ports identifizieren den Kommunikationsendpunkt bzw. Dienst auf einem Gerät." },
+          { id: "net-l5-q3", type: "short", prompt: "Welches Protokoll ist verbindungslos und garantiert selbst keine Zustellung?", accepted: ["udp"], expected: "UDP", explanation: "UDP ist verbindungslos und bietet selbst keine Zustell- oder Reihenfolgegarantie." }
+        ],
+        recap: ["TCP: verbindungsorientiert, geordnet, zuverlässige Zustellung mit Wiederholungen.", "UDP: verbindungslos, keine eigene Zustell- oder Reihenfolgegarantie.", "Ports ordnen den Verkehr einem Dienst auf dem Zielgerät zu."]
+      },
+      {
+        title: "IPv4-Protokoll & Adressierung",
+        goal: "Du kannst IPv4-Adressen und wichtige Felder eines IPv4-Headers erklären sowie eine einfache /26-Subnetzaufgabe lösen.",
+        source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 1–4.",
+        explanation: [
+          "IPv4-Adressen sind 32 Bit lang und werden meist als vier Dezimalzahlen von 0 bis 255 geschrieben, zum Beispiel 192.168.1.20. Eine Subnetzmaske trennt Netz- und Hostanteil. Präfix /26 bedeutet: 26 Netzbits und 6 Hostbits.",
+          "Wichtige IPv4-Headerfelder: Version (4), Headerlänge (IHL), Gesamtlänge, TTL (wird auf dem Weg durch Router vermindert), Protocol (z. B. 6 für TCP, 17 für UDP), Header-Prüfsumme sowie Quell- und Ziel-IP-Adresse. Die Prüfsumme schützt den IPv4-Header; sie ist keine zuverlässige Ende-zu-Ende-Prüfung der Anwendungsdaten.",
+          "Bei einem üblichen /26-Netz gibt es 2⁶ = 64 Adressen. In einem gewöhnlichen Subnetz sind die erste Adresse (Netzwerkadresse) und letzte Adresse (gerichtete Broadcastadresse) reserviert, also 62 übliche Hostadressen. Sonderfälle wie /31-Punkt-zu-Punkt-Verbindungen sind hier nicht gemeint."
+        ],
+        example: "192.168.1.70/26 gehört zum Netz 192.168.1.64/26. Der Bereich reicht von .64 bis .127; .64 ist die Netzwerkadresse, .127 die Broadcastadresse und .65–.126 sind 62 übliche Hostadressen.",
+        supplement: "Die 32-Bit-Adresse und Headerfelder sind im Internet Protocol (RFC 791) spezifiziert. RFC 791 beschreibt IPv4; für heutige Netzwerke können zusätzliche Standards und Verfahren gelten.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l6-ipv4-table",
+            title: "Arbeitsblatt: IPv4-Header ausfüllen",
+            prompt: "Trage zu jedem Feld seine Bedeutung bzw. den passenden Wert ein.",
+            rows: [
+              { label: "IPv4: Version-Feld", accepted: ["4", "ipv4", "4 = ipv4"], expected: "4 (IPv4)" },
+              { label: "IPv4 Protocol-Wert für TCP", accepted: ["6", "6 = tcp", "tcp"], expected: "6 = TCP" },
+              { label: "IPv4 Protocol-Wert für UDP", accepted: ["17", "17 = udp", "udp"], expected: "17 = UDP" },
+              { label: "TTL: Was geschieht an jedem Router?", accepted: ["wird um 1 verringert", "wird pro router um 1 verringert", "um 1 verringert", "router verringert ttl", "wird reduziert"], expected: "Wird pro Router mindestens um 1 verringert" },
+              { label: "IPv4-Adressen: Länge", accepted: ["32 bit", "32"], expected: "32 Bit" },
+              { label: "Welche Felder enthalten Sender und Ziel?", accepted: ["quell- und ziel-ip-adresse", "quell-ip und ziel-ip", "quell-ip-adresse und ziel-ip-adresse", "source und destination ip", "quelladresse und zieladresse"], expected: "Quell-IP-Adresse und Ziel-IP-Adresse" }
+            ]
+          },
+          {
+            type: "table",
+            id: "net-l6-subnet-table",
+            title: "Arbeitsblatt: /26 berechnen",
+            prompt: "Vervollständige die Tabelle für 192.168.1.70/26.",
+            rows: [
+              { label: "Hostbits", accepted: ["6", "6 bit", "6 bits"], expected: "6 (32 − 26)" },
+              { label: "Adressen insgesamt", accepted: ["64", "64 adressen"], expected: "64 (2⁶)" },
+              { label: "Netzwerkadresse", accepted: ["192.168.1.64", "192.168.1.64/26"], expected: "192.168.1.64" },
+              { label: "Broadcastadresse", accepted: ["192.168.1.127"], expected: "192.168.1.127" },
+              { label: "Übliche nutzbare Hostadressen", accepted: ["62", "62 hosts", "62 hostadressen"], expected: "62" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l6-ipv4-writing",
+            title: "Erkläre es selbst: TTL und Schleifen",
+            prompt: "Erkläre, warum ein Router die TTL verringert und was passiert, wenn sie null erreicht.",
+            modelAnswer: "Jeder Router verringert die TTL, damit ein IPv4-Paket nicht unbegrenzt in einer Routing-Schleife weitergeleitet wird. Erreicht die TTL null, wird das Paket verworfen; typischerweise erhält der Absender eine ICMP-Zeitüberschreitungsmeldung.",
+            criteria: ["TTL wird pro Router verringert.", "Sie verhindert unbegrenzte Weiterleitung in Schleifen.", "Bei TTL null wird das Paket verworfen."]
+          }
+        ],
+        practice: {
+          id: "net-l6-practice",
           prompt: "Ein Netz nutzt die Maske 255.255.255.192 (/26). Wie viele übliche IPv4-Hostadressen sind nutzbar?",
           options: ["62", "64", "126"],
           answer: 0,
           explanation: "/26 lässt 6 Hostbits: 64 Gesamtadressen. Netzwerk- und Broadcastadresse bleiben reserviert, also 62 nutzbare Hostadressen."
         },
-        supplement: "Bei der 20 dB-Rechenfrage setzt die handschriftliche Schülerantwort „10 %“ an eine unklare Stelle. Die sichere Aussage lautet: Empfangsspannung = 10 % der eingespeisten Spannung; die Spannungsamplitude wurde somit um 90 % reduziert. Das ist nicht dasselbe wie die Dämpfung der Leistung in Prozent.",
         test: [
-          { id: "net-l5-q1", prompt: "Wie viele nutzbare Hostadressen hat ein übliches /26-IPv4-Subnetz?", options: ["62", "64", "32"], answer: 0, explanation: "2⁶ = 64 Gesamtadressen; Netzwerk- und Broadcastadresse sind nicht für Hosts nutzbar, also 62." },
-          { id: "net-l5-q2", prompt: "Ein Ethernet-Header enthält Ziel-MAC, Quell-MAC und Typ. Was folgt im Beispiel mit IPv4?", options: ["Der IP-Header", "Der TCP-Header direkt vor Ethernet", "Die Anwendung ohne weitere Header"], answer: 0, explanation: "Auf Ethernet folgt hier der IP-Header; darin steht, welches Transportprotokoll folgt." },
-          { id: "net-l5-q3", prompt: "Bei 20 dB Spannungsdämpfung: Welcher Anteil der Eingangsspannung kommt an (gleiche Impedanz)?", options: ["10 %", "20 %", "90 %"], answer: 0, explanation: "20·log10(U1/U2)=20 dB ergibt U2/U1=0,1. Es kommen 10 % an; die Spannung ist um 90 % reduziert." },
-          { id: "net-l5-q4", prompt: "Was zeigt traceroute typischerweise?", options: ["Zwischenstationen (Hops) und Antwortzeiten auf dem Weg zum Ziel", "Die MAC-Adresse aller Endgeräte", "Die Zahl der im Zielnetz verfügbaren TCP-Ports"], answer: 0, explanation: "traceroute zeigt die erreichbaren Hops auf dem Pfad und die gemessenen Antwortzeiten." }
+          { id: "net-l6-q1", prompt: "Wie viele Bit hat eine IPv4-Adresse?", options: ["32", "48", "128"], answer: 0, explanation: "IPv4-Adressen sind 32 Bit lang." },
+          { id: "net-l6-q2", prompt: "Was bedeutet TTL = 0 beim Weiterleiten eines IPv4-Pakets?", options: ["Das Paket wird verworfen.", "Die MAC-Adresse wird gelöscht.", "Das Paket wird automatisch zu TCP."], answer: 0, explanation: "Router verringern die TTL; bei null wird das Paket verworfen, um endlose Weiterleitung zu vermeiden." },
+          { id: "net-l6-q3", type: "short", prompt: "Wie viele übliche Hostadressen sind in einem /26-Subnetz nutzbar?", accepted: ["62", "62 hosts", "62 hostadressen"], expected: "62", explanation: "Sechs Hostbits ergeben 64 Adressen insgesamt; Netzwerk- und Broadcastadresse bleiben reserviert, also 62." },
+          { id: "net-l6-q4", type: "table", prompt: "Ergänze die IPv4-Protokollnummern.", rows: [
+            { label: "TCP", accepted: ["6"], expected: "6" },
+            { label: "UDP", accepted: ["17"], expected: "17" }
+          ], explanation: "Im IPv4-Protocol-Feld steht 6 für TCP und 17 für UDP." }
         ],
-        recap: ["/26: 64 Gesamtadressen, typischerweise 62 nutzbare Hosts.", "Paket lesen: Ethernet → IP → TCP/UDP → Anwendungsdaten.", "20 dB Spannungsdämpfung: 10 % kommen an, 90 % Spannungsreduktion.", "traceroute zeigt Hops und Antwortzeiten."]
+        recap: ["IPv4-Adressen haben 32 Bit.", "Protocol 6 = TCP; Protocol 17 = UDP.", "TTL wird an Routern verringert.", "/26: 64 Adressen insgesamt, typischerweise 62 nutzbare Hosts."]
+      },
+      {
+        title: "Paketmitschnitt & Klausuraufgaben",
+        goal: "Du kannst Ethernet-, IPv4- und TCP/UDP-Felder in einem einfachen Mitschnitt zuordnen und längere Antworten strukturiert begründen.",
+        source: "Netzwerktechnik & OSI 7 Schichten_6231.pdf, S. 1–6.",
+        explanation: [
+          "Lies einen Mitschnitt von außen nach innen: Ethernet-Ziel-/Quell-MAC und Typ; danach IPv4-Quell-/Zieladresse und Protocol; anschließend TCP- oder UDP-Quell-/Zielport; dann die Anwendungsdaten.",
+          "Beispiel: Ethernet-Typ 0x0800 bedeutet IPv4. Im IPv4-Header steht Protocol 0x11 (dezimal 17), also UDP. Der Zielport 0x0035 (dezimal 53) ist der DNS-Port. Ein Port ist ein Hinweis auf den Dienst, aber kein alleiniger Beweis für den Inhalt.",
+          "Ein traceroute zeigt Zwischenstationen (Hops) und Antwortzeiten auf dem Weg zum Ziel. Für gleiche Impedanz bedeutet 20 dB Spannungsdämpfung: Es kommen 10 % der Eingangsspannung an; die Spannung ist um 90 % reduziert. Das ist nicht dasselbe wie 10 % Dämpfung."
+        ],
+        example: "Klausurantwort mit Begründung: „Der Ethernet-Typ ist 0x0800, daher folgt IPv4. Das Protocol-Feld ist 17, also UDP. Der Zielport 53 passt zum DNS-Dienst. Der Ethernet-Rahmen ist für den lokalen Abschnitt; die IP-Zieladresse bezeichnet das IP-Ziel.“",
+        supplement: "Bei der 20-dB-Aufgabe ist die handschriftliche Schülerantwort auf dem Scan an einer Stelle unklar. Die sichere Aussage bei gleicher Impedanz lautet: 10 % der Eingangsspannung kommen an, also 90 % Spannungsreduktion.",
+        tasks: [
+          {
+            type: "table",
+            id: "net-l7-capture-table",
+            title: "Klausuraufgabe: Paketmitschnitt auswerten",
+            prompt: "Gegeben: Ethernet-Typ 0x0800; IPv4 Protocol 0x11; Ziel-IP 203.0.113.8; UDP-Zielport 0x0035. Fülle die Auswertungstabelle.",
+            rows: [
+              { label: "Ethernet-Nutzlast", accepted: ["ipv4", "ip", "ipv4-paket", "ip-paket"], expected: "IPv4-Paket" },
+              { label: "IPv4 Protocol 0x11 (dezimal)", accepted: ["17", "17 = udp", "udp"], expected: "17 = UDP" },
+              { label: "Transportprotokoll", accepted: ["udp"], expected: "UDP" },
+              { label: "UDP-Zielport 0x0035 (dezimal)", accepted: ["53"], expected: "53" },
+              { label: "Typischer Dienst auf Zielport 53", accepted: ["dns", "domain name system"], expected: "DNS" },
+              { label: "Zweck der Ethernet-Ziel-MAC", accepted: ["nächster hop", "naechster hop", "gerät im lokalen netz", "lokaler abschnitt", "gateway im lokalen netz"], expected: "Nächstes Gerät auf dem lokalen Netzabschnitt (z. B. Gateway)" }
+            ]
+          },
+          {
+            type: "writing",
+            id: "net-l7-capture-writing",
+            title: "Ausführliche Antwort: Datenweg erklären",
+            prompt: "Erkläre in fünf bis sieben Sätzen, wie ein PC ein UDP-Datagramm an einen Server außerhalb des eigenen LANs sendet. Verwende die Begriffe Ethernet, Gateway, ARP, IPv4, UDP, MAC-Adresse und IP-Zieladresse.",
+            modelAnswer: "Die Anwendung übergibt ihre Daten an UDP, das Quell- und Zielport ergänzt. IPv4 ergänzt Quell- und Ziel-IP-Adresse; die IP-Zieladresse ist die des entfernten Servers. Weil der Server außerhalb des LANs liegt, wird das Paket an das Standardgateway gesendet. Ist dessen MAC-Adresse unbekannt, ermittelt der PC sie mit ARP. Der PC kapselt das IPv4-Paket in einen Ethernet-Rahmen mit der Gateway-MAC als Ziel-MAC. Der Router nimmt den Rahmen an und leitet das IP-Paket über den nächsten Netzabschnitt weiter; dort wird ein neuer Link-Layer-Rahmen verwendet.",
+            criteria: ["UDP-Port und IPv4-Adressen korrekt zugeordnet.", "IP-Ziel bleibt der entfernte Server.", "ARP ermittelt bei Bedarf die Gateway-MAC.", "Ethernet-Ziel-MAC gilt für den lokalen Abschnitt.", "Router leitet das IP-Paket weiter und verpackt für den nächsten Abschnitt neu."]
+          },
+          {
+            type: "table",
+            id: "net-l7-damping-table",
+            title: "Rechenaufgabe: 20 dB Spannungsdämpfung",
+            prompt: "Gegeben: gleiche Impedanz, Spannungsdämpfung 20 dB. Ergänze die Ergebnisse.",
+            rows: [
+              { label: "Verhältnis U_Eingang : U_Ausgang", accepted: ["10:1", "10 zu 1"], expected: "10 : 1" },
+              { label: "Anteil der Eingangsspannung am Ausgang", accepted: ["10%", "10 prozent", "0.1", "0,1"], expected: "10 %" },
+              { label: "Spannungsreduktion", accepted: ["90%", "90 prozent", "90"], expected: "90 %" }
+            ]
+          }
+        ],
+        practice: {
+          id: "net-l7-practice",
+          prompt: "Ein Mitschnitt zeigt Ethernet-Typ 0x0800. Welches Protokoll folgt im Ethernet-Nutzdatenfeld?",
+          options: ["IPv4", "ARP", "TCP direkt im Ethernet-Header"],
+          answer: 0,
+          explanation: "Der EtherType 0x0800 kennzeichnet IPv4; das IPv4-Paket liegt in der Ethernet-Nutzlast."
+        },
+        test: [
+          { id: "net-l7-q1", prompt: "In welcher Reihenfolge liest man die Header von außen nach innen?", options: ["Ethernet → IP → TCP/UDP", "TCP/UDP → Ethernet → IP", "IP → Anwendung → Ethernet"], answer: 0, explanation: "Der lokale Ethernet-Rahmen umschließt das IP-Paket, das wiederum TCP- oder UDP-Daten enthält." },
+          { id: "net-l7-q2", type: "table", prompt: "Ordne die Werte zu.", rows: [
+            { label: "EtherType 0x0800", accepted: ["ipv4"], expected: "IPv4" },
+            { label: "IPv4 Protocol 17", accepted: ["udp"], expected: "UDP" },
+            { label: "UDP-Port 53", accepted: ["dns"], expected: "DNS (typischer Dienst)" }
+          ], explanation: "0x0800 kennzeichnet IPv4, Protocol 17 ist UDP und Port 53 ist der übliche DNS-Port." },
+          { id: "net-l7-q3", type: "short", prompt: "Was zeigt traceroute typischerweise entlang eines Netzwerkpfads?", accepted: ["hops", "zwischenstationen", "router hops", "hops und antwortzeiten"], expected: "Zwischenstationen (Hops) und Antwortzeiten", explanation: "traceroute versucht Router-Zwischenstationen und Antwortzeiten auf dem Weg zum Ziel sichtbar zu machen." }
+        ],
+        recap: ["Von außen nach innen: Ethernet → IPv4 → TCP/UDP → Anwendungsdaten.", "Ethernet-MAC gilt für den lokalen Abschnitt; IP-Adressen dienen der Weiterleitung zwischen Netzen.", "Begründe Antworten mit Feldwert und Funktion, nicht nur mit einem Namen."]
       }
     ],
     cards: [
       { front: "Nenne die OSI-Schichten von unten nach oben.", back: "Bitübertragung, Sicherung, Vermittlung, Transport, Sitzung, Darstellung, Anwendung." },
+      { front: "Was bedeutet Ethernet-Typ 0x0800?", back: "Die Ethernet-Nutzlast enthält ein IPv4-Paket (RFC 894)." },
+      { front: "Welche Ziel-MAC hat der erste Rahmen zu einem Internetserver?", back: "Die MAC-Adresse des Standardgateways; die IP-Zieladresse bleibt die des entfernten Servers." },
       { front: "Welche Adresse steht im Ethernet-Rahmen für ein entferntes Ziel?", back: "Die MAC-Adresse des lokalen Standardgateways; die IP-Zieladresse bleibt die des entfernten Servers." },
       { front: "Was löst ARP auf?", back: "Eine IPv4-Adresse in eine MAC-Adresse auf dem lokalen Netzabschnitt." },
+      { front: "Worin unterscheiden sich CSMA/CD und CSMA/CA?", back: "CSMA/CD erkennt Kollisionen beim klassischen geteilten Halbduplex-Ethernet; CSMA/CA versucht Kollisionen im WLAN zu vermeiden." },
       { front: "Worin unterscheiden sich TCP und UDP kurz?", back: "TCP bietet verbindungsorientierte, geordnete und zuverlässige Übertragung; UDP ist verbindungslos und garantiert selbst keine Zustellung." },
+      { front: "Welche IPv4-Protocol-Werte bezeichnen TCP und UDP?", back: "TCP = 6; UDP = 17." },
       { front: "Wie viele nutzbare Hosts hat /26 üblicherweise?", back: "62: 64 Gesamtadressen minus Netzwerk- und Broadcastadresse." }
     ],
     exam: [
@@ -274,7 +528,18 @@ const subjects = {
       { id: "net-exam-5", prompt: "Welche Aussage zu TCP passt?", options: ["Geordnete zuverlässige Übertragung mit Wiederholungen", "Verbindungslos ohne Zustellgarantie", "Löst IP-Adressen in MAC-Adressen auf"], answer: 0, explanation: "TCP bietet unter anderem geordnete Übertragung und Wiederholungen." },
       { id: "net-exam-6", prompt: "Was bedeutet CSMA/CA?", options: ["Kollisionsvermeidung beim Mehrfachzugriff", "IP-Adressierung ohne Router", "Fehlerkorrektur durch TCP"], answer: 0, explanation: "CA steht für Collision Avoidance." },
       { id: "net-exam-7", prompt: "Wie viele nutzbare IPv4-Hosts hat ein /26-Netz üblicherweise?", options: ["62", "64", "128"], answer: 0, explanation: "64 Gesamtadressen minus Netzwerk- und Broadcastadresse ergeben 62 nutzbare Hostadressen." },
-      { id: "net-exam-8", prompt: "20 dB Spannungsdämpfung bedeutet, dass …", options: ["10 % der Spannung ankommen", "90 % der Spannung ankommen", "20 % der Spannung ankommen"], answer: 0, explanation: "Das Spannungsverhältnis beträgt 1:10; damit kommen 10 % an (gleiche Impedanz)." }
+      { id: "net-exam-8", prompt: "20 dB Spannungsdämpfung bedeutet, dass …", options: ["10 % der Spannung ankommen", "90 % der Spannung ankommen", "20 % der Spannung ankommen"], answer: 0, explanation: "Das Spannungsverhältnis beträgt 1:10; damit kommen 10 % an (gleiche Impedanz)." },
+      { id: "net-exam-9", type: "table", prompt: "Ergänze die Protokoll-Zuordnung.", rows: [
+        { label: "EtherType 0x0800", accepted: ["ipv4"], expected: "IPv4" },
+        { label: "IPv4 Protocol 6", accepted: ["tcp"], expected: "TCP" },
+        { label: "IPv4 Protocol 17", accepted: ["udp"], expected: "UDP" }
+      ], explanation: "EtherType 0x0800 kennzeichnet IPv4; Protocol 6 ist TCP und Protocol 17 ist UDP." },
+      { id: "net-exam-10", type: "short", prompt: "Welches Protokoll fragt im lokalen IPv4-Netz nach einer MAC-Adresse?", accepted: ["arp"], expected: "ARP", explanation: "ARP ordnet einer IPv4-Adresse die MAC-Adresse auf dem lokalen Netzabschnitt zu." },
+      { id: "net-exam-11", type: "table", prompt: "Fülle den Vergleich der Zugriffsverfahren.", rows: [
+        { label: "WLAN", accepted: ["csma/ca", "ca"], expected: "CSMA/CA" },
+        { label: "Klassisches geteiltes Halbduplex-Ethernet", accepted: ["csma/cd", "cd"], expected: "CSMA/CD" }
+      ], explanation: "WLAN verwendet Kollisionsvermeidung (CA); klassisches geteiltes Halbduplex-Ethernet kann Kollisionen erkennen (CD)." },
+      { id: "net-exam-12", type: "short", prompt: "Welches Transportprotokoll bietet selbst geordnete, zuverlässige Zustellung?", accepted: ["tcp"], expected: "TCP", explanation: "TCP bietet Zuverlässigkeits- und Reihenfolgemechanismen; UDP selbst nicht." }
     ]
   }
 };
@@ -284,7 +549,7 @@ const root = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".main-nav [data-action]")];
 const freshProgress = () => ({
   politics: { unlocked: 0, completed: [], examPassed: false, bestExam: 0, againCards: [] },
-  network: { unlocked: 0, completed: [], examPassed: false, bestExam: 0, againCards: [] },
+  network: { unlocked: 0, completed: [], examPassed: false, bestExam: 0, againCards: [], curriculumVersion: 2 },
   missed: {}
 });
 
@@ -305,6 +570,13 @@ try {
       progress = { ...freshProgress(), ...parsed };
       for (const id of ["politics", "network"]) {
         progress[id] = { ...freshProgress()[id], ...parsed[id] };
+      }
+      if (parsed.network.curriculumVersion !== 2) {
+        progress.network = freshProgress().network;
+        for (const [id, question] of Object.entries(progress.missed)) {
+          if (question.subjectId === "network") delete progress.missed[id];
+        }
+        storageNotice = "Der Netzwerk-Lernpfad wurde erweitert. Sein alter Fortschritt wurde zurückgesetzt, damit die neuen Levels und Tests fair bearbeitet werden können.";
       }
     } else {
       throw new Error("Gespeicherter Lernstand hat ein unerwartetes Format.");
@@ -482,13 +754,14 @@ function renderLesson(subjectId, level) {
     <div class="example-box"><strong>Beispiel</strong><p>${level.example}</p></div>
     ${level.supplement ? `<aside class="supplement"><h3>Ergänzung / wichtiger Hinweis</h3><p>${level.supplement}</p></aside>` : ""}
     <div class="source-callout"><span class="source-tag">PDF-Grundlage</span> <strong>Quelle:</strong> ${level.source}</div>
+    ${level.tasks ? renderLearningTasks(level.tasks) : ""}
     <section class="exercise" aria-labelledby="practice-title">
       <p class="eyebrow">Aktiv üben</p><h3 id="practice-title">Denk kurz nach und wähle eine Antwort</h3><p class="question-prompt">${practice.prompt}</p>
       <div class="choice-list">${practice.options.map((option, index) => `<button class="choice-button" type="button" data-action="practice-answer" data-question="${practice.id}" data-answer="${index}">${option}</button>`).join("")}</div>
       <div id="feedback-${practice.id}" class="feedback" aria-live="polite"></div>
     </section>
     <section class="exercise" aria-labelledby="test-title">
-      <p class="eyebrow">Level-Check</p><h3 id="test-title">Kurztest – ${level.test.length} Fragen</h3><p>Wähle jeweils eine Antwort. Ab ${Math.ceil(level.test.length * 2 / 3)} richtigen Antworten ist das Level bestanden.</p>
+      <p class="eyebrow">Level-Check</p><h3 id="test-title">Kurztest – ${level.test.length} Aufgaben</h3><p>Bearbeite die Auswahl-, Kurzantwort- und Tabellenaufgaben. Ab ${Math.ceil(level.test.length * 2 / 3)} richtigen Aufgaben ist das Level bestanden.</p>
       ${renderTestForm(level.test, `level-${subjectId}-${currentLevel}`)}
     </section>
     <div class="recap"><h3>Das solltest du mitnehmen</h3><ul>${level.recap.map((item) => `<li>${item}</li>`).join("")}</ul></div>
@@ -496,9 +769,58 @@ function renderLesson(subjectId, level) {
   </article>`;
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+function renderLearningTasks(tasks) {
+  return tasks.map((task) => {
+    if (task.type === "writing") {
+      return `<section class="exercise writing-task" data-task="${task.id}">
+        <p class="eyebrow">Ausführliche Aufgabe</p><h3>${task.title}</h3><p class="question-prompt">${task.prompt}</p>
+        <label class="sr-only" for="response-${task.id}">Deine Antwort</label><textarea id="response-${task.id}" rows="5" placeholder="Formuliere deine Antwort in eigenen Worten."></textarea>
+        <div class="test-actions"><button type="button" class="button secondary" data-action="reveal-writing" data-task="${task.id}" aria-expanded="false">Musterlösung und Prüfpunkte anzeigen</button><span class="card-meta">Selbstcheck – deine Formulierung wird nicht automatisch bewertet.</span></div>
+        <div class="model-answer" id="model-${task.id}" hidden><h4>Beispiel für eine gute Antwort</h4><p>${task.modelAnswer}</p><strong>Prüfe, ob deine Antwort diese Punkte enthält:</strong><ul>${task.criteria.map((criterion) => `<li>${criterion}</li>`).join("")}</ul></div>
+      </section>`;
+    }
+    return `<section class="exercise worksheet" data-task="${task.id}">
+      <p class="eyebrow">Tabelle zum Ergänzen</p><h3>${task.title}</h3><p class="question-prompt">${task.prompt}</p>
+      <div class="worksheet-table-wrap" role="region" aria-label="${task.title}: Tabelle" tabindex="0"><table class="worksheet-table"><thead><tr><th scope="col">Angabe</th><th scope="col">Deine Antwort</th><th scope="col">Rückmeldung</th></tr></thead><tbody>
+      ${task.rows.map((row, index) => `<tr><th scope="row">${row.label}</th><td><label class="sr-only" for="cell-${task.id}-${index}">${row.label}</label><input id="cell-${task.id}-${index}" type="text" autocomplete="off" data-answers="${escapeHtml(JSON.stringify(row.accepted))}" data-expected="${escapeHtml(row.expected)}"><span class="task-cell-feedback" aria-live="polite"></span></td><td><span class="task-state">Noch offen</span></td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="test-actions"><button type="button" class="button blue" data-action="check-table" data-task="${task.id}">Tabelle prüfen</button><span class="feedback" aria-live="polite"></span></div>
+    </section>`;
+  }).join("");
+}
+
+function normalizeAnswer(value) {
+  return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("de-DE").replace(/[^a-z0-9]/g, "");
+}
+
+function answerMatches(value, accepted) {
+  const normalized = normalizeAnswer(value);
+  return normalized.length > 0 && accepted.some((answer) => normalizeAnswer(answer) === normalized);
+}
+
+function renderAssessmentQuestion(question, index) {
+  if (question.type === "short") {
+    return `<fieldset class="test-question"><legend>${index + 1}. ${question.prompt}</legend><label class="test-short"><span>Deine Antwort</span><input type="text" name="${question.id}" autocomplete="off"></label><div class="test-answer-note" id="answer-${question.id}" hidden></div></fieldset>`;
+  }
+  if (question.type === "table") {
+    return `<fieldset class="test-question"><legend>${index + 1}. ${question.prompt}</legend><div class="worksheet-table-wrap" role="region" aria-label="${question.prompt}: Tabelle" tabindex="0"><table class="worksheet-table assessment-table"><thead><tr><th scope="col">Feld</th><th scope="col">Deine Antwort</th></tr></thead><tbody>${question.rows.map((row, rowIndex) => `<tr><th scope="row">${row.label}</th><td><label class="sr-only" for="answer-${question.id}-${rowIndex}">${row.label}</label><input id="answer-${question.id}-${rowIndex}" type="text" name="${question.id}-${rowIndex}" autocomplete="off"></td></tr>`).join("")}</tbody></table></div><div class="test-answer-note" id="answer-${question.id}" hidden></div></fieldset>`;
+  }
+  return `<fieldset class="test-question"><legend>${index + 1}. ${question.prompt}</legend><div class="test-options">${question.options.map((option, choice) => `<label class="test-option"><input type="radio" name="${question.id}" value="${choice}"><span>${option}</span></label>`).join("")}</div><div class="test-answer-note" id="answer-${question.id}" hidden></div></fieldset>`;
+}
+
 function renderTestForm(questions, formId) {
   return `<form class="test-form" data-form="${formId}">
-    ${questions.map((question, index) => `<fieldset class="test-question"><legend>${index + 1}. ${question.prompt}</legend><div class="test-options">${question.options.map((option, choice) => `<label class="test-option"><input type="radio" name="${question.id}" value="${choice}"><span>${option}</span></label>`).join("")}</div><div class="test-answer-note" id="answer-${question.id}" hidden></div></fieldset>`).join("")}
+    ${questions.map(renderAssessmentQuestion).join("")}
     <div class="test-actions"><button class="button" type="submit">Antworten prüfen</button><span class="card-meta" id="result-${formId}" aria-live="polite"></span></div>
   </form>`;
 }
@@ -529,7 +851,7 @@ function renderExam(subjectId) {
   }
   return `<article class="lesson-card">
     <div class="lesson-topline"><span class="badge ${subjectId === "network" ? "blue" : ""}">Abschlusstest</span><button class="button secondary small" type="button" data-action="back-subject">Zurück zum Lernpfad</button></div>
-    <h2>Prüfe deinen Lernstand</h2><p class="goal">Acht gemischte Fragen. Ab 6 richtigen Antworten (75 %) ist der Test bestanden. Dein bisher bester Wert: ${progress[subjectId].bestExam}/${subject.exam.length}.</p>
+    <h2>Prüfe deinen Lernstand</h2><p class="goal">Gemischte Auswahl-, Kurzantwort- und Tabellenaufgaben. Ab ${Math.ceil(subject.exam.length * 0.75)} von ${subject.exam.length} richtigen Aufgaben (mindestens 75 %) ist der Test bestanden. Dein bisher bester Wert: ${progress[subjectId].bestExam}/${subject.exam.length}.</p>
     ${renderTestForm(subject.exam, `exam-${subjectId}`)}
   </article>`;
 }
@@ -539,7 +861,11 @@ function renderReview() {
   const items = Object.values(progress.missed);
   if (!items.length) return `<article class="lesson-card"><div class="lesson-topline"><span class="badge">Wiederholung</span><button class="button secondary small" data-action="back-subject" type="button">Zurück</button></div><div class="empty-state"><h2>Alles aufgeholt</h2><p>Im Moment gibt es keine falsch beantworteten Fragen zum Wiederholen.</p></div></article>`;
   return `<article class="lesson-card"><div class="lesson-topline"><span class="badge">Wiederholung</span><button class="button secondary small" data-action="back-subject" type="button">Zurück</button></div><h2>Fragen noch einmal abrufen</h2><p class="goal">Die Antwort wird sofort erklärt. Bei einer richtigen Antwort verschwindet die Frage aus deiner Wiederholungsliste.</p>
-    <div class="review-list">${items.map((question) => `<section class="review-item" data-review="${question.id}"><h3>${question.prompt}</h3><div class="choice-list">${question.options.map((option, index) => `<button type="button" class="choice-button" data-action="review-answer" data-question="${question.id}" data-answer="${index}">${option}</button>`).join("")}</div><div class="feedback" id="review-feedback-${question.id}" aria-live="polite"></div></section>`).join("")}</div>
+    <div class="review-list">${items.map((question) => `<section class="review-item" data-review="${question.id}"><h3>${question.prompt}</h3>${question.options
+      ? `<div class="choice-list">${question.options.map((option, index) => `<button type="button" class="choice-button" data-action="review-answer" data-question="${question.id}" data-answer="${index}">${option}</button>`).join("")}</div><div class="feedback" id="review-feedback-${question.id}" aria-live="polite"></div>`
+      : `<div class="review-answer"><strong>Musterlösung:</strong>${question.rows
+        ? `<ul>${question.rows.map((row) => `<li>${row.label}: ${row.expected}</li>`).join("")}</ul>`
+        : `<p>${question.expected}</p>`}<p>${question.explanation}</p></div><button type="button" class="button secondary small" data-action="review-clear" data-question="${question.id}">Musterlösung wiederholt</button>`}</section>`).join("")}</div>
   </article>`;
 }
 
@@ -550,6 +876,36 @@ function saveMiss(question, subjectId, answer) {
     progress.missed[question.id] = { ...question, subjectId };
   }
   persist();
+}
+
+function saveAssessmentMiss(question, subjectId, correct, levelIndex) {
+  if (correct) {
+    delete progress.missed[question.id];
+  } else {
+    progress.missed[question.id] = { ...question, subjectId, levelIndex };
+  }
+  persist();
+}
+
+function checkTable(button) {
+  const task = button.closest(".worksheet");
+  const inputs = [...task.querySelectorAll("input")];
+  let correctCount = 0;
+  for (const input of inputs) {
+    const correct = answerMatches(input.value, JSON.parse(input.dataset.answers));
+    const state = input.closest("tr").querySelector(".task-state");
+    const note = input.closest("td").querySelector(".task-cell-feedback");
+    input.setAttribute("aria-invalid", String(!correct));
+    input.classList.toggle("task-input-correct", correct);
+    input.classList.toggle("task-input-incorrect", !correct);
+    state.textContent = correct ? "Richtig" : `Lösung: ${input.dataset.expected}`;
+    note.textContent = correct ? "✓" : "✗";
+    correctCount += Number(correct);
+  }
+  const result = task.querySelector(".feedback");
+  const allCorrect = correctCount === inputs.length;
+  result.textContent = `${correctCount}/${inputs.length} Tabellenfelder richtig. ${allCorrect ? "Sehr gut – die Tabelle stimmt." : "Vergleiche die markierten Felder mit den Lösungen und versuche es noch einmal."}`;
+  result.className = `feedback ${allCorrect ? "good" : "bad"}`;
 }
 
 function handlePractice(button) {
@@ -579,23 +935,42 @@ function gradeForm(form) {
   let score = 0;
   let unanswered = false;
   for (const question of questions) {
-    const value = submitted.get(question.id);
+    const values = question.type === "table"
+      ? question.rows.map((_, index) => submitted.get(`${question.id}-${index}`))
+      : [submitted.get(question.id)];
     const note = document.querySelector(`#answer-${question.id}`);
-    if (value === null) unanswered = true;
-    const correct = value !== null && Number(value) === question.answer;
+    const blank = values.some((value) => value === null || !String(value).trim());
+    if (blank) unanswered = true;
+    let correct = false;
+    if (question.type === "short") {
+      correct = !blank && answerMatches(values[0], question.accepted);
+    } else if (question.type === "table") {
+      correct = !blank && question.rows.every((row, index) => answerMatches(values[index], row.accepted));
+    } else {
+      correct = values[0] !== null && Number(values[0]) === question.answer;
+    }
     if (correct) score++;
-    saveMiss(question, subjectId, correct ? question.answer : (value === null ? -1 : Number(value)));
+    if (question.type === "short" || question.type === "table") {
+      saveAssessmentMiss(question, subjectId, correct, isExam ? -1 : currentLevel);
+    } else {
+      saveMiss(question, subjectId, correct ? question.answer : (values[0] === null ? -1 : Number(values[0])));
+    }
     note.hidden = false;
-    note.textContent = `${correct ? "Richtig. " : `Richtige Antwort: ${question.options[question.answer]}. `}${question.explanation}`;
+    const expected = question.type === "short"
+      ? `Erwartete Antwort: ${question.expected}. `
+      : question.type === "table"
+        ? `Lösungen: ${question.rows.map((row) => `${row.label}: ${row.expected}`).join("; ")}. `
+        : `Richtige Antwort: ${question.options[question.answer]}. `;
+    note.textContent = `${correct ? "Richtig. " : expected}${question.explanation}`;
     note.setAttribute("role", correct ? "status" : "alert");
   }
   const result = document.querySelector(`#result-${formId}`);
   if (isExam) {
-    const passed = score >= 6;
+    const passed = score >= Math.ceil(questions.length * 0.75);
     progress[subjectId].bestExam = Math.max(progress[subjectId].bestExam, score);
     if (passed) progress[subjectId].examPassed = true;
     persist();
-    result.textContent = `${unanswered ? "Nicht beantwortete Fragen zählen als falsch. " : ""}${score}/${questions.length} richtig. ${passed ? "Abschlusstest bestanden!" : "Noch nicht bestanden – wiederhole die Levels und versuche es erneut."}`;
+    result.textContent = `${unanswered ? "Nicht beantwortete Fragen zählen als falsch. " : ""}${score}/${questions.length} Aufgaben richtig. ${passed ? "Abschlusstest bestanden!" : "Noch nicht bestanden – wiederhole die Levels und versuche es erneut."}`;
     result.className = passed ? "feedback good" : "feedback bad";
   } else {
     const passed = score >= Math.ceil(questions.length * 2 / 3);
@@ -668,6 +1043,17 @@ document.addEventListener("click", (event) => {
     }
   } else if (action === "practice-answer") {
     handlePractice(control);
+  } else if (action === "check-table") {
+    checkTable(control);
+  } else if (action === "reveal-writing") {
+    const model = root.querySelector(`#model-${control.dataset.task}`);
+    model.hidden = !model.hidden;
+    control.setAttribute("aria-expanded", String(!model.hidden));
+    control.textContent = model.hidden ? "Musterlösung und Prüfpunkte anzeigen" : "Musterlösung ausblenden";
+  } else if (action === "review-clear") {
+    delete progress.missed[control.dataset.question];
+    persist();
+    renderSubject(activeSubject, { keepLevel: true, mode: "review" });
   } else if (action === "cards") {
     view = "cards";
     cardDeck = subjects[activeSubject].cards.map((_, index) => index);

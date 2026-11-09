@@ -30,7 +30,7 @@ body {
   line-height: 1.6;
 }
 
-button, input { font: inherit; }
+button, input, textarea { font: inherit; }
 button { color: inherit; }
 a { color: #b6e0c8; }
 a:hover { text-decoration-thickness: 2px; }
@@ -328,6 +328,45 @@ h3 { font-size: 1.12rem; }
 .test-option input { margin-top: 0.35rem; accent-color: var(--green); }
 .test-result { margin-top: 1rem; }
 .test-answer-note { margin: 0.5rem 0; padding: 0.7rem 0.8rem; border-radius: 0.65rem; background: #1b2420; font-size: 0.88rem; }
+.test-short { display: grid; gap: 0.35rem; max-width: 32rem; color: var(--muted); font-size: 0.88rem; }
+.test-short input, .worksheet-table input, .writing-task textarea {
+  width: 100%;
+  min-height: 2.65rem;
+  border: 1px solid #405149;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  background: #0e1412;
+  color: var(--ink);
+}
+.writing-task textarea { min-height: 7rem; resize: vertical; }
+.test-short input:focus, .worksheet-table input:focus, .writing-task textarea:focus { border-color: var(--blue); }
+.worksheet-table-wrap { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+.worksheet-table-wrap:focus-visible { outline: 3px solid #e2bc79; outline-offset: 3px; }
+.worksheet-table { width: 100%; min-width: 34rem; border-collapse: collapse; text-align: left; }
+.worksheet-table th, .worksheet-table td { padding: 0.6rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.worksheet-table th { color: var(--ink); font-size: 0.86rem; }
+.worksheet-table td { width: 36%; }
+.worksheet-table td:last-child { width: 25%; color: var(--muted); font-size: 0.82rem; }
+.worksheet-table input { min-width: 9rem; }
+.worksheet-table .task-state { display: block; min-width: 8rem; }
+.task-cell-feedback { display: block; min-height: 1.15rem; font-size: 0.78rem; }
+.task-input-correct { border-color: #4b8064 !important; }
+.task-input-incorrect { border-color: #85514b !important; }
+.model-answer { margin-top: 1rem; padding: 0.9rem 1rem; border-radius: 0.8rem; background: #1b2420; }
+.model-answer h4 { margin: 0 0 0.55rem; }
+.model-answer ul { margin-bottom: 0; padding-left: 1.2rem; }
+.review-answer { margin: 0.8rem 0; padding: 0.8rem; border-radius: 0.7rem; background: #1b2420; }
+.review-answer ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+.review-answer p:last-child { margin-bottom: 0; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
 .test-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: 1rem; }
 .level-navigation { display: flex; justify-content: space-between; gap: 0.7rem; margin-top: 1.2rem; }
 .level-navigation .button { flex: 1; }
@@ -375,7 +414,8 @@ h3 { font-size: 1.12rem; }
   .subject-card { min-height: 0; padding: 0.8rem; border-radius: 0.8rem; }
   .subject-card .subject-top { margin-bottom: 0.6rem; }
   .subject-header { align-items: flex-start; flex-direction: column; margin-bottom: 1rem; }
-  .subject-layout { grid-template-columns: 1fr; }
+  .subject-layout { grid-template-columns: minmax(0, 1fr); }
+  .subject-layout > section { min-width: 0; }
   .path-panel { position: static; padding: 0.75rem; border-radius: 0.8rem; }
   .lesson-card { padding: 0.8rem; border-radius: 0.8rem; }
   .exercise { margin: 0.8rem 0; padding: 0.7rem; }
