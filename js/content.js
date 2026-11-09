@@ -541,6 +541,330 @@ export const subjects = {
       ], explanation: "WLAN verwendet Kollisionsvermeidung (CA); klassisches geteiltes Halbduplex-Ethernet kann Kollisionen erkennen (CD)." },
       { id: "net-exam-12", type: "short", prompt: "Welches Transportprotokoll bietet selbst geordnete, zuverlässige Zustellung?", accepted: ["tcp"], expected: "TCP", explanation: "TCP bietet Zuverlässigkeits- und Reihenfolgemechanismen; UDP selbst nicht." }
     ]
+  },
+  digestion: {
+    title: "Verdauungsapparat (LF 9)",
+    shortTitle: "Verdauung",
+    icon: "🩺",
+    color: "rose",
+    description: "MFA Lernfeld 9: Vom Mund bis zum After, Leber, Galle und Pankreas, Diabetes mellitus sowie Diagnostik, Laborwerte, iFOBT und Sonografie – genau entlang deiner Kompetenzliste.",
+    levels: [
+      {
+        title: "Der Verdauungstrakt im Überblick",
+        goal: "Du kannst den Verdauungstrakt vom Mund bis zum After mit deutschen Bezeichnungen und Fachbegriffen beschriften und die Aufgaben der einzelnen Bestandteile nennen.",
+        source: "Kompetenzliste Klassenarbeit LF 9 (Verdauungsapparat), Punkte 1 und 4.",
+        explanation: [
+          "Der Verdauungstrakt (Tractus gastrointestinalis) ist ein etwa 6–8 m langer Muskelschlauch. Die Nahrung durchläuft ihn in fester Reihenfolge: Mundhöhle (Cavum oris) → Rachen (Pharynx) → Speiseröhre (Ösophagus) → Magen (Gaster bzw. Ventriculus) → Dünndarm (Intestinum tenue) mit Zwölffingerdarm (Duodenum), Leerdarm (Jejunum) und Krummdarm (Ileum) → Dickdarm (Intestinum crassum) mit Blinddarm (Caecum) und Wurmfortsatz (Appendix vermiformis), Grimmdarm (Colon) und Mastdarm (Rektum) → After (Anus).",
+          "Dazu kommen die Anhangsdrüsen, durch die die Nahrung nicht hindurchläuft, die aber Verdauungssäfte liefern: Speicheldrüsen (Mund), Leber (Hepar) mit Gallenblase (Vesica biliaris) und Bauchspeicheldrüse (Pankreas). Galle und Pankreassaft münden gemeinsam an der Papilla duodeni major (Papilla Vateri) ins Duodenum.",
+          "Aufgaben in Kurzform: Mund = zerkleinern, einspeicheln, Stärkeverdauung beginnt. Rachen = Kreuzung von Luft- und Speiseweg, Schlucken. Speiseröhre = Transport durch Peristaltik. Magen = Speicher, Durchmischung, Eiweißverdauung beginnt, Desinfektion durch Salzsäure. Dünndarm = Hauptort der Verdauung und Resorption (Aufnahme) der Nährstoffe. Dickdarm = Rückresorption von Wasser und Elektrolyten, Eindickung, Darmflora. Rektum/Anus = Speicherung und kontrollierte Ausscheidung (Defäkation).",
+          "Richtungsbegriffe brauchst du ständig: oral = zum Mund hin, aboral = vom Mund weg; kranial = kopfwärts, kaudal = steißwärts. Die Wellenbewegung der Muskulatur, die den Inhalt aboral schiebt, heißt Peristaltik."
+        ],
+        example: "Ein Bissen Brot: Im Mund wird er gekaut und beginnt durch die Speichel-Amylase süß zu schmecken, im Magen wird er mit Säure vermischt, im Dünndarm werden die Bausteine aufgenommen, im Dickdarm wird dem Rest Wasser entzogen – nach etwa 1–3 Tagen wird er ausgeschieden.",
+        practice: {
+          id: "dig-l1-practice",
+          prompt: "Welcher Abschnitt folgt direkt auf den Magen?",
+          options: ["Zwölffingerdarm (Duodenum)", "Leerdarm (Jejunum)", "Blinddarm (Caecum)"],
+          answer: 0,
+          explanation: "Hinter dem Magenpförtner (Pylorus) beginnt der Dünndarm mit dem Duodenum, danach folgen Jejunum und Ileum."
+        },
+        test: [
+          { id: "dig-l1-q1", prompt: "Welche Reihenfolge ist richtig?", options: ["Pharynx → Ösophagus → Gaster → Duodenum → Jejunum → Ileum → Colon → Rektum", "Ösophagus → Pharynx → Gaster → Ileum → Jejunum → Duodenum → Colon → Rektum", "Pharynx → Gaster → Ösophagus → Duodenum → Colon → Ileum → Rektum"], answer: 0, explanation: "Rachen, Speiseröhre, Magen, dann Dünndarm (Duodenum, Jejunum, Ileum), danach Dickdarm (Caecum, Colon, Rektum)." },
+          { id: "dig-l1-q2", prompt: "Wo findet der größte Teil der Nährstoffaufnahme (Resorption) statt?", options: ["Im Dünndarm", "Im Magen", "Im Dickdarm"], answer: 0, explanation: "Der Dünndarm mit seiner riesigen Oberfläche ist der Hauptort von Verdauung und Resorption." },
+          { id: "dig-l1-q3", type: "short", prompt: "Wie lautet der Fachbegriff für die Speiseröhre?", accepted: ["ösophagus", "oesophagus", "osophagus", "esophagus"], expected: "Ösophagus", explanation: "Speiseröhre = Ösophagus (Oesophagus)." }
+        ],
+        recap: ["Mund → Rachen → Speiseröhre → Magen → Dünndarm (Duodenum, Jejunum, Ileum) → Dickdarm (Caecum, Colon, Rektum) → After.", "Anhangsdrüsen: Speicheldrüsen, Leber mit Gallenblase, Pankreas.", "Dünndarm = Hauptort der Verdauung und Resorption; Dickdarm = Wasserrückgewinnung.", "Peristaltik schiebt den Inhalt aboral (vom Mund weg)."]
+      },
+      {
+        title: "Mund, Speicheldrüsen & Schluckakt",
+        goal: "Du kannst die drei großen Speicheldrüsen deutsch und mit Fachbegriff benennen, die Funktion des Speichels angeben und den Schluckakt erläutern.",
+        source: "Kompetenzliste LF 9, Punkte 2 und 3.",
+        explanation: [
+          "Es gibt drei große, paarig angelegte Speicheldrüsen: die Ohrspeicheldrüse (Glandula parotidea, kurz Parotis) vor dem Ohr, die Unterkieferspeicheldrüse (Glandula submandibularis) und die Unterzungenspeicheldrüse (Glandula sublingualis). Dazu kommen viele kleine Speicheldrüsen in der Mundschleimhaut. Pro Tag entstehen etwa 1–1,5 Liter Speichel.",
+          "Funktionen des Speichels: Er macht den Bissen gleitfähig (Schleim/Muzine), beginnt mit dem Enzym α-Amylase (Ptyalin) die Stärkeverdauung, löst Geschmacksstoffe, reinigt Zähne und Mundhöhle, wirkt durch Lysozym und Antikörper (IgA) gegen Keime und puffert Säuren.",
+          "Der Schluckakt läuft in drei Phasen ab: 1. Orale Phase (willkürlich): Die Zunge formt einen Bissen (Bolus) und schiebt ihn nach hinten in den Rachen. 2. Pharyngeale Phase (reflektorisch, nicht mehr steuerbar): Das Gaumensegel (weicher Gaumen) hebt sich und verschließt den Nasenrachen, der Kehlkopf wird angehoben und der Kehldeckel (Epiglottis) verschließt die Luftröhre; die Atmung setzt kurz aus. 3. Ösophageale Phase (reflektorisch): Der obere Ösophagussphinkter öffnet sich, Peristaltikwellen transportieren den Bissen in einigen Sekunden zum Magen, der untere Ösophagussphinkter öffnet sich kurz.",
+          "Klinischer Bezug: Schluckstörungen heißen Dysphagie. Gelangt Nahrung in die Luftröhre (Aspiration), droht eine Aspirationspneumonie – deshalb Patienten z. B. nach Schlaganfall nur nach Schluckprüfung essen lassen."
+        ],
+        example: "Wenn du beim Essen lachst und dich „verschluckst“, war der Kehldeckel nicht rechtzeitig geschlossen – reflektorisches Husten befördert das Essen aus der Luftröhre wieder heraus.",
+        practice: {
+          id: "dig-l2-practice",
+          prompt: "Welche Struktur verhindert beim Schlucken, dass Nahrung in die Luftröhre gelangt?",
+          options: ["Der Kehldeckel (Epiglottis)", "Der Pylorus", "Die Ohrspeicheldrüse"],
+          answer: 0,
+          explanation: "Der Kehldeckel legt sich über den Kehlkopfeingang; das Gaumensegel verschließt gleichzeitig den Nasenraum."
+        },
+        test: [
+          { id: "dig-l2-q1", prompt: "Wie heißt die Ohrspeicheldrüse mit Fachbegriff?", options: ["Glandula parotidea (Parotis)", "Glandula sublingualis", "Glandula submandibularis"], answer: 0, explanation: "Parotis = Ohrspeicheldrüse; sublingualis = unter der Zunge; submandibularis = unter dem Unterkiefer." },
+          { id: "dig-l2-q2", prompt: "Welches Enzym im Speichel beginnt die Stärkeverdauung?", options: ["α-Amylase (Ptyalin)", "Pepsin", "Lipase aus dem Pankreas"], answer: 0, explanation: "Die Speichel-Amylase spaltet Stärke in kleinere Zuckerbausteine (z. B. Maltose)." },
+          { id: "dig-l2-q3", prompt: "Welche Phase des Schluckakts ist willkürlich steuerbar?", options: ["Die orale Phase", "Die pharyngeale Phase", "Die ösophageale Phase"], answer: 0, explanation: "Nur die orale Phase steuerst du bewusst; ab dem Rachen läuft der Schluckreflex automatisch ab." }
+        ],
+        recap: ["Parotis (Ohr-), Glandula submandibularis (Unterkiefer-), Glandula sublingualis (Unterzungenspeicheldrüse).", "Speichel: gleitfähig machen, Stärkeverdauung (Amylase), Abwehr (Lysozym, IgA), Reinigung.", "Schluckakt: oral (willkürlich) → pharyngeal (Gaumensegel + Kehldeckel schließen, Atemstopp) → ösophageal (Peristaltik)."]
+      },
+      {
+        title: "Magen: Abschnitte, Drüsen & Magensaft",
+        goal: "Du kannst die Magenabschnitte deutsch und mit Fachbegriff beschriften, die Drüsenzellen der Magenschleimhaut mit ihren Produkten nennen und die Funktion von Pepsin, Intrinsic-Faktor und Gastrin angeben.",
+        source: "Kompetenzliste LF 9, Punkte 5, 6 und 7.",
+        explanation: [
+          "Abschnitte des Magens (Gaster, Ventriculus) in Nahrungsrichtung: Mageneingang (Kardia, Pars cardiaca) – Magengrund bzw. Magenkuppel (Fundus) – Magenkörper (Korpus, Corpus) – Pförtnervorraum (Antrum pyloricum, Pars pylorica) – Magenpförtner (Pylorus), ein Ringmuskel, der den Übertritt in das Duodenum steuert. Die kurze, innere Krümmung heißt kleine Kurvatur (Curvatura minor), die lange, äußere große Kurvatur (Curvatura major).",
+          "In der Magenschleimhaut liegen Drüsen mit verschiedenen Zellen: Hauptzellen bilden Pepsinogen (Vorstufe von Pepsin). Belegzellen (Parietalzellen) bilden Salzsäure (HCl) und den Intrinsic-Faktor. Nebenzellen bilden Schleim (Muzin), der zusammen mit Bikarbonat die Schleimhaut vor Selbstverdauung schützt. G-Zellen im Antrum bilden das Hormon Gastrin. Pro Tag entstehen etwa 2–3 Liter Magensaft (pH ca. 1–2).",
+          "Pepsin: Die Salzsäure aktiviert Pepsinogen zu Pepsin. Pepsin spaltet Eiweiße (Proteine) in kleinere Bruchstücke (Polypeptide) – die Eiweißverdauung beginnt also im Magen. Salzsäure tötet außerdem Keime ab und lässt Eiweiße aufquellen (denaturieren).",
+          "Intrinsic-Faktor: Er bindet Vitamin B12 und ermöglicht dessen Aufnahme im letzten Abschnitt des Ileums. Fehlt er (z. B. bei chronisch-atrophischer Gastritis oder nach Magenentfernung), entsteht ein Vitamin-B12-Mangel mit perniziöser Anämie. Gastrin: Das Hormon wird bei Dehnung des Magens und durch Eiweiß freigesetzt und regt die Bildung von Salzsäure und Pepsinogen sowie die Magenbewegung (Motilität) an."
+        ],
+        example: "Nach einer Magenentfernung (Gastrektomie) brauchen Patienten lebenslang Vitamin-B12-Spritzen – weil die Belegzellen und damit der Intrinsic-Faktor fehlen. Solche Injektionen gibst du als MFA häufig.",
+        practice: {
+          id: "dig-l3-practice",
+          prompt: "Welche Zellen bilden Salzsäure und Intrinsic-Faktor?",
+          options: ["Belegzellen (Parietalzellen)", "Hauptzellen", "G-Zellen"],
+          answer: 0,
+          explanation: "Belegzellen = HCl + Intrinsic-Faktor. Hauptzellen = Pepsinogen. G-Zellen = Gastrin. Nebenzellen = Schleim."
+        },
+        test: [
+          { id: "dig-l3-q1", prompt: "Wie heißt der Magenpförtner mit Fachbegriff?", options: ["Pylorus", "Kardia", "Fundus"], answer: 0, explanation: "Der Pylorus ist der Ringmuskel am Magenausgang zum Duodenum." },
+          { id: "dig-l3-q2", type: "table", prompt: "Welche Zellen bilden …?", rows: [
+            { label: "Pepsinogen", accepted: ["hauptzellen", "hauptzelle"], expected: "Hauptzellen" },
+            { label: "Salzsäure (HCl)", accepted: ["belegzellen", "belegzelle", "parietalzellen", "parietalzelle"], expected: "Belegzellen (Parietalzellen)" },
+            { label: "Schleim (Muzin)", accepted: ["nebenzellen", "nebenzelle"], expected: "Nebenzellen" },
+            { label: "Gastrin", accepted: ["gzellen", "gzelle", "g-zellen", "g-zelle"], expected: "G-Zellen" }
+          ], explanation: "Hauptzellen → Pepsinogen, Belegzellen → HCl + Intrinsic-Faktor, Nebenzellen → Schleim, G-Zellen → Gastrin." },
+          { id: "dig-l3-q3", prompt: "Wofür wird der Intrinsic-Faktor benötigt?", options: ["Für die Aufnahme von Vitamin B12 im Ileum", "Für die Fettverdauung im Duodenum", "Für die Aktivierung von Trypsin"], answer: 0, explanation: "Ohne Intrinsic-Faktor kann Vitamin B12 nicht resorbiert werden → perniziöse Anämie." }
+        ],
+        recap: ["Kardia → Fundus → Korpus → Antrum → Pylorus; kleine (minor) und große (major) Kurvatur.", "Hauptzellen: Pepsinogen · Belegzellen: HCl + Intrinsic-Faktor · Nebenzellen: Schleim · G-Zellen: Gastrin.", "Pepsin spaltet Eiweiße; Intrinsic-Faktor → Vitamin-B12-Aufnahme; Gastrin → mehr Säure, Pepsinogen und Magenbewegung."]
+      },
+      {
+        title: "Dünndarm & Oberflächenvergrößerung",
+        goal: "Du kannst die Abschnitte des Dünndarms nennen und das Prinzip der Oberflächenvergrößerung erklären.",
+        source: "Kompetenzliste LF 9, Punkte 4 und 8.",
+        explanation: [
+          "Der Dünndarm (Intestinum tenue) ist etwa 3–5 m lang und besteht aus Zwölffingerdarm (Duodenum, ca. 25–30 cm, C-förmig um den Pankreaskopf), Leerdarm (Jejunum, ca. 2/5) und Krummdarm (Ileum, ca. 3/5). Im Duodenum münden Gallen- und Pankreasgang an der Papilla Vateri; hier wird der saure Speisebrei (Chymus) durch Bikarbonat neutralisiert.",
+          "Prinzip der Oberflächenvergrößerung: Je größer die Oberfläche, desto mehr Nährstoffe können gleichzeitig aufgenommen werden. Der Dünndarm vergrößert seine Innenfläche in drei Stufen: 1. Ringfalten (Kerckring-Falten, Plicae circulares) – Schleimhaut und Unterschleimhaut bilden quer verlaufende Falten (ca. ×3). 2. Darmzotten (Villi intestinales) – fingerförmige Ausstülpungen der Schleimhaut (ca. ×10). 3. Mikrovilli (Bürstensaum) – winzige Ausstülpungen der Zellmembran jeder Darmzelle (ca. ×20).",
+          "Zusammen wird die Oberfläche etwa 600-fach vergrößert – Lehrbücher nennen meist rund 180–200 m² (neuere Messungen kommen auf ca. 30 m², was immer noch einer Einzimmerwohnung entspricht). In jeder Zotte liegen Blutkapillaren (Abtransport von Zuckern und Aminosäuren zur Leber über die Pfortader) und ein Lymphgefäß (Chylusgefäß, Abtransport der Fette).",
+          "Im Bürstensaum sitzen außerdem eigene Enzyme, z. B. Maltase (spaltet Maltose in zwei Glukose) sowie Peptidasen. Im terminalen Ileum werden Vitamin B12 (mit Intrinsic-Faktor) und Gallensäuren zurückgewonnen."
+        ],
+        example: "Vergleich: Ein glattes Handtuch nimmt weniger Wasser auf als ein Frotteehandtuch mit vielen Schlaufen. Der Dünndarm ist das ultimative Frotteehandtuch.",
+        practice: {
+          id: "dig-l4-practice",
+          prompt: "Welche Struktur ist die kleinste Stufe der Oberflächenvergrößerung?",
+          options: ["Mikrovilli (Bürstensaum)", "Darmzotten", "Kerckring-Falten"],
+          answer: 0,
+          explanation: "Falten → Zotten → Mikrovilli: von grob nach fein. Mikrovilli sind Ausstülpungen der einzelnen Zellmembran."
+        },
+        test: [
+          { id: "dig-l4-q1", prompt: "In welcher Reihenfolge (grob → fein) vergrößert der Dünndarm seine Oberfläche?", options: ["Kerckring-Falten → Zotten → Mikrovilli", "Mikrovilli → Zotten → Kerckring-Falten", "Zotten → Haustren → Mikrovilli"], answer: 0, explanation: "Ringfalten (×3), Zotten (×10), Mikrovilli (×20)." },
+          { id: "dig-l4-q2", prompt: "Warum ist eine große Oberfläche im Dünndarm wichtig?", options: ["Damit möglichst viele Nährstoffe resorbiert werden können", "Damit der Stuhl schneller eingedickt wird", "Damit mehr Salzsäure gebildet wird"], answer: 0, explanation: "Mehr Kontaktfläche = mehr Resorption in kurzer Zeit." },
+          { id: "dig-l4-q3", type: "short", prompt: "Wie heißt der mittlere Dünndarmabschnitt (deutsch oder Fachbegriff)?", accepted: ["jejunum", "leerdarm"], expected: "Jejunum (Leerdarm)", explanation: "Duodenum → Jejunum → Ileum." }
+        ],
+        recap: ["Dünndarm: Duodenum → Jejunum → Ileum (ca. 3–5 m).", "Oberflächenvergrößerung: Kerckring-Falten (×3) → Zotten (×10) → Mikrovilli (×20).", "Ziel: maximale Resorption; Zotten enthalten Kapillaren und Lymphgefäß.", "Maltase sitzt im Bürstensaum der Dünndarmschleimhaut."]
+      },
+      {
+        title: "Dickdarm & Obstipation",
+        goal: "Du kannst die Aufgaben des Dickdarms beschreiben, seine Abschnitte von kranial und von kaudal aus benennen und erklären, was Obstipation ist und wie man ihr vorbeugt.",
+        source: "Kompetenzliste LF 9, Punkte 9, 10 und 11.",
+        explanation: [
+          "Aufgaben des Dickdarms (Intestinum crassum, ca. 1,5 m): Rückresorption von Wasser und Elektrolyten (Natrium) – der flüssige Darminhalt wird zu Stuhl eingedickt; Schleimbildung als Gleitmittel; Darmflora (Mikrobiom): Bakterien bauen Ballaststoffe ab, bilden Vitamin K und schützen vor Krankheitserregern; Speicherung des Stuhls und kontrollierte Ausscheidung (Defäkation). Verdauungsenzyme bildet der Dickdarm nicht.",
+          "Abschnitte – von kranial (vom Dünndarm her, in Richtung des Nahrungstransports): Blinddarm (Caecum) mit Wurmfortsatz (Appendix vermiformis) → aufsteigender Grimmdarm (Colon ascendens) → rechte Kolonflexur (Flexura coli dextra) → querverlaufender Grimmdarm (Colon transversum) → linke Kolonflexur (Flexura coli sinistra) → absteigender Grimmdarm (Colon descendens) → S-förmiger Grimmdarm (Colon sigmoideum, Sigma) → Mastdarm (Rektum) → Analkanal/After (Anus). Am Übergang vom Ileum zum Caecum liegt die Bauhin-Klappe (Ileozäkalklappe), die einen Rückfluss verhindert.",
+          "Von kaudal (vom After aus, so wie das Endoskop bei der Darmspiegelung vorgeschoben wird) ist es genau umgekehrt: Anus → Rektum → Sigma → Colon descendens → linke Flexur → Colon transversum → rechte Flexur → Colon ascendens → Caecum mit Appendix.",
+          "Obstipation (Verstopfung) bedeutet: seltener, harter, schwer absetzbarer Stuhl – als Richtwert weniger als drei Stuhlentleerungen pro Woche, oft mit starkem Pressen und dem Gefühl unvollständiger Entleerung. Ursachen: ballaststoffarme Kost, zu wenig Flüssigkeit, Bewegungsmangel, Unterdrücken des Stuhldrangs, Medikamente (z. B. Opioide, Eisen), Erkrankungen. Vorbeugung: ballaststoffreich essen (Vollkorn, Gemüse, Obst, Hülsenfrüchte; ca. 30 g Ballaststoffe/Tag), ausreichend trinken (ca. 1,5–2 l/Tag, sofern ärztlich nichts dagegen spricht), regelmäßig bewegen, Stuhldrang nicht unterdrücken, feste Toilettenzeiten, Abführmittel (Laxanzien) nicht dauerhaft ohne ärztlichen Rat."
+        ],
+        example: "Eine ältere Patientin klagt über Verstopfung, trinkt aber nur zwei Tassen Kaffee am Tag und bewegt sich kaum. Ein guter Tipp: über den Tag verteilt Wasser oder Tee trinken, Vollkornbrot statt Weißbrot, täglicher Spaziergang.",
+        practice: {
+          id: "dig-l5-practice",
+          prompt: "Was ist die Hauptaufgabe des Dickdarms?",
+          options: ["Wasser und Elektrolyte zurückgewinnen und den Stuhl eindicken", "Eiweiße mit Pepsin verdauen", "Insulin produzieren"],
+          answer: 0,
+          explanation: "Der Dickdarm resorbiert Wasser und Salze; die Nährstoffe wurden bereits im Dünndarm aufgenommen."
+        },
+        test: [
+          { id: "dig-l5-q1", prompt: "Welcher Abschnitt folgt von kranial aus direkt auf das Colon descendens?", options: ["Colon sigmoideum (Sigma)", "Colon transversum", "Caecum"], answer: 0, explanation: "… Colon transversum → linke Flexur → Colon descendens → Sigma → Rektum." },
+          { id: "dig-l5-q2", prompt: "Welcher Tipp beugt einer Obstipation vor?", options: ["Ballaststoffreiche Kost, viel trinken und Bewegung", "Stuhldrang möglichst lange unterdrücken", "Täglich Abführmittel ohne ärztlichen Rat"], answer: 0, explanation: "Ballaststoffe binden Wasser und vergrößern das Stuhlvolumen; Bewegung regt die Darmtätigkeit an." },
+          { id: "dig-l5-q3", type: "short", prompt: "Wie heißt der Wurmfortsatz mit Fachbegriff?", accepted: ["appendix vermiformis", "appendix"], expected: "Appendix vermiformis", explanation: "Entzündet er sich, spricht man (umgangssprachlich falsch: Blinddarmentzündung) von Appendizitis." }
+        ],
+        recap: ["Dickdarm: Wasser/Elektrolyte zurückgewinnen, Stuhl eindicken, Darmflora, Speicherung und Ausscheidung.", "Von kranial: Caecum (+ Appendix) → Colon ascendens → rechte Flexur → Colon transversum → linke Flexur → Colon descendens → Sigma → Rektum → Anus.", "Von kaudal: genau umgekehrt (Weg des Koloskops).", "Obstipation vorbeugen: Ballaststoffe, trinken, Bewegung, Stuhldrang nicht unterdrücken."]
+      },
+      {
+        title: "Leber & Gallenblase",
+        goal: "Du kannst die Hauptaufgaben der Leber in ganzen Sätzen erläutern, die Gallenblase mit Fachbegriff benennen und beschriften und die Funktion der Gallenflüssigkeit erklären.",
+        source: "Kompetenzliste LF 9, Punkte 12 und 13.",
+        explanation: [
+          "Die Leber (Hepar) ist mit ca. 1,5 kg die größte Drüse des Körpers und liegt im rechten Oberbauch unter dem Zwerchfell. Über die Pfortader (Vena portae) erhält sie das nährstoffreiche Blut aus dem Darm, über die Leberarterie sauerstoffreiches Blut.",
+          "Hauptaufgaben in ganzen Sätzen: 1. Die Leber steuert den Stoffwechsel: Sie speichert Glukose als Glykogen und gibt sie bei Bedarf wieder ins Blut ab; sie baut Fette und Eiweiße um. 2. Die Leber bildet lebenswichtige Eiweiße wie Albumin und Gerinnungsfaktoren. 3. Die Leber entgiftet das Blut: Sie baut Alkohol, Medikamente und Ammoniak (zu Harnstoff) ab. 4. Die Leber bildet täglich etwa 0,5–1 Liter Galle. 5. Die Leber speichert Glykogen, Eisen und Vitamine (z. B. A, D und B12). 6. Die Leber baut den roten Blutfarbstoff zu Bilirubin ab, das mit der Galle ausgeschieden wird.",
+          "Die Gallenblase (Vesica biliaris, auch Vesica fellea) ist ein birnenförmiges Hohlorgan an der Unterseite der Leber. Sie speichert die Galle und dickt sie ein. Der Gallenweg: Lebergang (Ductus hepaticus communis) + Gallenblasengang (Ductus cysticus) → Hauptgallengang (Ductus choledochus) → gemeinsam mit dem Pankreasgang an der Papilla Vateri ins Duodenum. Nach einer fettreichen Mahlzeit zieht sich die Gallenblase zusammen (Hormon Cholezystokinin).",
+          "Funktion der Galle: Die Gallensäuren emulgieren Fette – sie zerteilen große Fetttropfen in winzige Tröpfchen, so dass die Lipase eine viel größere Angriffsfläche hat. Außerdem hilft Galle bei der Aufnahme fettlöslicher Vitamine (A, D, E, K) und dient der Ausscheidung von Bilirubin, Cholesterin und Giftstoffen. Bilirubin färbt den Stuhl braun. Galle enthält selbst keine Verdauungsenzyme."
+        ],
+        example: "Spülmittel wirkt wie Galle: Ein Tropfen auf fettiges Wasser zerteilt das Fett in kleine Tröpfchen – genau das macht die Galle im Duodenum, bevor die Lipase das Fett spaltet.",
+        practice: {
+          id: "dig-l6-practice",
+          prompt: "Was macht die Galle mit den Fetten im Darm?",
+          options: ["Sie emulgiert die Fette (zerteilt sie in kleine Tröpfchen)", "Sie spaltet Fette mit eigenen Enzymen in Fettsäuren", "Sie wandelt Fette in Glukose um"],
+          answer: 0,
+          explanation: "Galle emulgiert nur – die eigentliche Spaltung übernimmt die Pankreas-Lipase."
+        },
+        test: [
+          { id: "dig-l6-q1", type: "short", prompt: "Nenne den Fachbegriff für die Gallenblase.", accepted: ["vesica biliaris", "vesica fellea", "vesicabiliaris", "vesicafellea"], expected: "Vesica biliaris (Vesica fellea)", explanation: "Gallenblase = Vesica biliaris bzw. Vesica fellea." },
+          { id: "dig-l6-q2", prompt: "Welche Aussage über die Leber ist richtig?", options: ["Sie bildet Gerinnungsfaktoren und Albumin.", "Sie bildet Insulin.", "Sie speichert die Galle bis zur Mahlzeit."], answer: 0, explanation: "Insulin bildet das Pankreas, die Galle speichert die Gallenblase. Die Leber bildet viele Plasmaproteine." },
+          { id: "dig-l6-q3", prompt: "Wie heißt der Hauptgallengang, der ins Duodenum mündet?", options: ["Ductus choledochus", "Ductus cysticus", "Vena portae"], answer: 0, explanation: "Ductus cysticus = Gallenblasengang; Ductus choledochus = Hauptgallengang; Vena portae = Pfortader." }
+        ],
+        recap: ["Leber: Stoffwechsel/Speicher (Glykogen), Eiweißbildung (Albumin, Gerinnung), Entgiftung, Gallebildung, Bilirubinabbau.", "Gallenblase = Vesica biliaris (fellea): speichert und dickt Galle ein.", "Galle emulgiert Fette, hilft bei fettlöslichen Vitaminen, scheidet Bilirubin aus – enthält keine Enzyme.", "Gallenweg: Ductus hepaticus + Ductus cysticus → Ductus choledochus → Papilla Vateri."]
+      },
+      {
+        title: "Pankreas & Verdauungsenzyme",
+        goal: "Du kannst das Pankreas als exokrine und endokrine Drüse erklären, je zwei Stoffe nennen und Bildungsort und Funktion von Amylase, Lipase, Trypsin, Chymotrypsin und Maltase angeben.",
+        source: "Kompetenzliste LF 9, Punkte 14 und 15.",
+        explanation: [
+          "Die Bauchspeicheldrüse (Pankreas) liegt quer hinter dem Magen; der Kopf liegt in der C-Schlinge des Duodenums, der Schwanz reicht bis zur Milz. Sie ist eine gemischte Drüse.",
+          "Exokrin (Abgabe über einen Ausführungsgang nach außen – hier in den Darm): Das Pankreas bildet täglich ca. 1,5 Liter Pankreassaft, der über den Pankreasgang ins Duodenum fließt. Er enthält Verdauungsenzyme (z. B. α-Amylase, Lipase, Trypsinogen, Chymotrypsinogen) und Bikarbonat, das den sauren Magenbrei neutralisiert.",
+          "Endokrin (Abgabe von Hormonen direkt ins Blut): In den Langerhans-Inseln bilden B-Zellen (β-Zellen) Insulin, das den Blutzucker senkt, und A-Zellen (α-Zellen) Glukagon, das den Blutzucker erhöht. (D-Zellen bilden Somatostatin.)",
+          "Enzyme – Bildungsort und Funktion: α-Amylase (Speicheldrüsen und Pankreas) spaltet Stärke in Maltose/Mehrfachzucker. Lipase (Pankreas) spaltet Fette (Triglyceride) in Glycerin bzw. Monoglyceride und Fettsäuren. Trypsin (Pankreas, als inaktives Trypsinogen abgegeben und erst im Duodenum aktiviert) spaltet Eiweiße/Polypeptide in kleinere Peptide. Chymotrypsin (Pankreas, als Chymotrypsinogen, durch Trypsin aktiviert) spaltet ebenfalls Eiweiße in Peptide. Maltase (Dünndarmschleimhaut, Bürstensaum) spaltet Maltose in zwei Glukosemoleküle. Dass Trypsin und Chymotrypsin inaktiv abgegeben werden, schützt das Pankreas vor Selbstverdauung – geschieht das trotzdem, entsteht eine Pankreatitis."
+        ],
+        example: "Der Name verrät oft den Job: Amyl- (lat. amylum = Stärke), Lip- (gr. lipos = Fett), Malt- (Malz/Maltose). Die Endung -ase bedeutet: Das ist ein Enzym.",
+        practice: {
+          id: "dig-l7-practice",
+          prompt: "Welcher Stoff wird vom endokrinen Pankreas gebildet?",
+          options: ["Insulin", "Lipase", "Bikarbonat"],
+          answer: 0,
+          explanation: "Endokrin = Hormone ins Blut (Insulin, Glukagon). Lipase und Bikarbonat sind Bestandteile des exokrinen Pankreassafts."
+        },
+        test: [
+          { id: "dig-l7-q1", prompt: "Was bedeutet „exokrin“?", options: ["Die Drüse gibt ihr Sekret über einen Ausführungsgang nach außen bzw. in ein Hohlorgan ab.", "Die Drüse gibt Hormone direkt ins Blut ab.", "Die Drüse bildet keine Sekrete."], answer: 0, explanation: "Exokrin = Ausführungsgang (z. B. ins Duodenum); endokrin = Hormone direkt ins Blut." },
+          { id: "dig-l7-q2", type: "table", prompt: "Was spaltet das Enzym?", rows: [
+            { label: "Amylase", accepted: ["stärke", "starke", "kohlenhydrate", "polysaccharide"], expected: "Stärke (Kohlenhydrate)" },
+            { label: "Lipase", accepted: ["fette", "fett", "triglyceride", "lipide"], expected: "Fette" },
+            { label: "Trypsin", accepted: ["eiweiße", "eiweisse", "eiweiß", "eiweiss", "proteine", "polypeptide", "peptide"], expected: "Eiweiße (Proteine/Polypeptide)" },
+            { label: "Maltase", accepted: ["maltose", "malzzucker"], expected: "Maltose" }
+          ], explanation: "Amylase → Stärke, Lipase → Fette, Trypsin/Chymotrypsin → Eiweiße, Maltase → Maltose (in 2 × Glukose)." },
+          { id: "dig-l7-q3", prompt: "Wo wird Maltase gebildet?", options: ["In der Dünndarmschleimhaut (Bürstensaum)", "In der Gallenblase", "In den Belegzellen des Magens"], answer: 0, explanation: "Maltase ist ein Bürstensaumenzym der Dünndarmzellen." }
+        ],
+        recap: ["Exokrines Pankreas: Pankreassaft ins Duodenum – Enzyme (Amylase, Lipase, Trypsin, Chymotrypsin) + Bikarbonat.", "Endokrines Pankreas (Langerhans-Inseln): Insulin (B-Zellen, senkt BZ) und Glukagon (A-Zellen, hebt BZ).", "Amylase: Speicheldrüsen + Pankreas → Stärke. Lipase: Pankreas → Fette. Trypsin/Chymotrypsin: Pankreas → Eiweiße. Maltase: Dünndarm → Maltose."]
+      },
+      {
+        title: "Diabetes mellitus",
+        goal: "Du kannst Diabetes mellitus vollständig definieren, vier Diagnosekriterien aufzählen, Typ 1 und Typ 2 vergleichen, Gestationsdiabetes erläutern und die Spätschäden mit Fachbegriffen beschreiben.",
+        source: "Kompetenzliste LF 9, Punkte 16 bis 20. Grenzwerte nach der Praxisempfehlung der Deutschen Diabetes Gesellschaft (DDG).",
+        explanation: [
+          "Definition: Diabetes mellitus („honigsüßer Durchfluss“) ist eine chronische Stoffwechselerkrankung, die durch einen dauerhaft erhöhten Blutzuckerspiegel (chronische Hyperglykämie) gekennzeichnet ist. Ursache ist ein absoluter oder relativer Insulinmangel und/oder eine verminderte Insulinwirkung (Insulinresistenz). Typische Symptome sind großer Durst (Polydipsie), häufiges Wasserlassen (Polyurie), Müdigkeit, Gewichtsabnahme und Infektanfälligkeit; Zucker im Urin heißt Glukosurie.",
+          "Vier Diagnosekriterien (eines reicht, bei fehlenden Symptomen bestätigen): 1. HbA1c ≥ 6,5 % (≥ 48 mmol/mol). 2. Nüchtern-Plasmaglukose ≥ 126 mg/dl (≥ 7,0 mmol/l). 3. Gelegenheits-Plasmaglukose ≥ 200 mg/dl (≥ 11,1 mmol/l) – zu einer beliebigen Tageszeit. 4. oraler Glukosetoleranztest (oGTT): 2-Stunden-Wert ≥ 200 mg/dl (≥ 11,1 mmol/l). Nüchtern bedeutet: mindestens 8 Stunden keine Kalorienzufuhr.",
+          "Typ 1 vs. Typ 2: Typ 1 (ca. 5 %) ist eine Autoimmunerkrankung – das Immunsystem zerstört die B-Zellen, es entsteht ein absoluter Insulinmangel. Er beginnt meist in Kindheit/Jugend, oft plötzlich, die Betroffenen sind meist normal- oder untergewichtig; es droht eine Ketoazidose; Therapie: lebenslang Insulin. Typ 2 (ca. 90–95 %) entsteht durch Insulinresistenz und einen relativen Insulinmangel, begünstigt durch Übergewicht, Bewegungsmangel, Ernährung und Vererbung. Er beginnt meist schleichend im Erwachsenenalter (zunehmend auch Jüngere); Therapie: Lebensstiländerung (Ernährung, Bewegung, Gewichtsabnahme), Tabletten (orale Antidiabetika, z. B. Metformin), später evtl. Insulin. Gemeinsam: erhöhter Blutzucker, gleiche Spätschäden, Schulung und Kontrollen nötig.",
+          "Gestationsdiabetes ist eine Glukosetoleranzstörung, die erstmals in der Schwangerschaft auftritt bzw. erkannt wird. Alle Schwangeren erhalten zwischen der 24. und 28. SSW ein Screening (50-g-Suchtest, bei Auffälligkeit 75-g-oGTT). Mögliche Folgen für das Neugeborene: übermäßiges Geburtsgewicht (Makrosomie, > 4000–4500 g) mit Geburtskomplikationen wie Schulterdystokie, Unterzuckerung (Hypoglykämie) direkt nach der Geburt, Atemnotsyndrom durch verzögerte Lungenreife, Neugeborenengelbsucht und später ein erhöhtes Risiko für Übergewicht und Diabetes. Die Mutter hat nach der Geburt ein deutlich erhöhtes Risiko für Typ-2-Diabetes.",
+          "Spätschäden entstehen durch jahrelang erhöhten Blutzucker, der die Gefäße schädigt: Makroangiopathie = Schädigung der großen Blutgefäße (Arteriosklerose → Herzinfarkt, Schlaganfall, pAVK). Mikroangiopathie = Schädigung der kleinen Gefäße, daraus folgen: diabetische Retinopathie (Netzhaut der Augen → Sehverschlechterung bis Erblindung), diabetische Nephropathie (Nieren → Niereninsuffizienz bis Dialyse) und diabetische Neuropathie (Nerven → Kribbeln, Taubheit, Schmerzunempfindlichkeit). Neuropathie und Durchblutungsstörung zusammen führen zum diabetischen Fußsyndrom."
+        ],
+        example: "Ein 58-jähriger, übergewichtiger Patient kommt wegen ständigem Durst. Gelegenheitsblutzucker: 240 mg/dl, HbA1c 7,8 % – zwei Kriterien erfüllt, typisch Typ 2. Du vereinbarst Termine für Augenarzt, Fußkontrolle und Urin auf Albumin.",
+        practice: {
+          id: "dig-l8-practice",
+          prompt: "Welcher Diabetes-Typ beruht auf einer Autoimmunzerstörung der B-Zellen?",
+          options: ["Typ 1", "Typ 2", "Gestationsdiabetes"],
+          answer: 0,
+          explanation: "Typ 1 = absoluter Insulinmangel durch Autoimmunprozess; Typ 2 = Insulinresistenz + relativer Insulinmangel."
+        },
+        test: [
+          { id: "dig-l8-q1", prompt: "Ab welchem Nüchtern-Plasmaglukosewert spricht man von Diabetes?", options: ["≥ 126 mg/dl (7,0 mmol/l)", "≥ 100 mg/dl (5,6 mmol/l)", "≥ 200 mg/dl (11,1 mmol/l)"], answer: 0, explanation: "Nüchtern ≥ 126 mg/dl; Gelegenheits- und oGTT-2-h-Wert ≥ 200 mg/dl; HbA1c ≥ 6,5 %." },
+          { id: "dig-l8-q2", type: "table", prompt: "Nenne den Fachbegriff für den Spätschaden an …", rows: [
+            { label: "den Augen (Netzhaut)", accepted: ["retinopathie", "diabetische retinopathie"], expected: "Retinopathie" },
+            { label: "den Nieren", accepted: ["nephropathie", "diabetische nephropathie"], expected: "Nephropathie" },
+            { label: "den Nerven", accepted: ["neuropathie", "polyneuropathie", "diabetische neuropathie", "diabetische polyneuropathie"], expected: "Neuropathie" },
+            { label: "den großen Blutgefäßen", accepted: ["makroangiopathie"], expected: "Makroangiopathie" }
+          ], explanation: "Retinopathie, Nephropathie, Neuropathie (Folgen der Mikroangiopathie) und Makroangiopathie." },
+          { id: "dig-l8-q3", prompt: "Welche Folge kann ein Gestationsdiabetes für das Neugeborene haben?", options: ["Makrosomie und Unterzuckerung nach der Geburt", "Typ-1-Diabetes ab Geburt", "Untergewicht durch zu wenig Glukose"], answer: 0, explanation: "Das Kind bekommt über die Plazenta zu viel Zucker, bildet selbst viel Insulin → großes Kind; nach der Geburt fällt die Zuckerzufuhr weg → Hypoglykämie." }
+        ],
+        recap: ["Definition: chronische Hyperglykämie durch absoluten/relativen Insulinmangel und/oder Insulinresistenz.", "Diagnose: HbA1c ≥ 6,5 % · nüchtern ≥ 126 mg/dl · Gelegenheit ≥ 200 mg/dl · oGTT 2 h ≥ 200 mg/dl.", "Typ 1: autoimmun, absoluter Mangel, jung, Insulin. Typ 2: Insulinresistenz, Übergewicht, schleichend, Lebensstil + Tabletten.", "Gestationsdiabetes: Screening 24.–28. SSW; Kind: Makrosomie, Hypoglykämie, Atemnot.", "Spätschäden: Makroangiopathie, Mikroangiopathie → Retino-, Nephro-, Neuropathie, diabetischer Fuß."]
+      },
+      {
+        title: "Diagnostik, Laborwerte, iFOBT & Sonografie",
+        goal: "Du kannst die Diagnostik-Begriffe erklären, Laborwerte Leber bzw. Pankreas zuordnen, einem Patienten den iFOB-Test erläutern und ihn auf eine Sonografie vorbereiten.",
+        source: "Kompetenzliste LF 9, Punkte 22 bis 25. Vorsorgeregeln nach G-BA (gültig seit 01.04.2025).",
+        explanation: [
+          "Diagnostik-Begriffe: Anamnese = Erhebung der Krankengeschichte im Gespräch (Eigenanamnese vom Patienten selbst, Fremdanamnese durch Angehörige) – z. B. Beschwerden, Stuhlgewohnheiten, Medikamente, Vorerkrankungen. Inspektion = Betrachtung, z. B. Bauchform, Narben, Gelbfärbung der Haut (Ikterus). Palpation = Untersuchung durch Abtasten, z. B. Druckschmerz, Abwehrspannung, Lebergröße. Resistenz = bei der Palpation tastbarer Widerstand bzw. tastbare Verhärtung (z. B. vergrößertes Organ, Tumor, Kotballen). Auskultation = Abhören mit dem Stethoskop, am Bauch vor allem der Darmgeräusche (fehlend, normal, „klingend“ bei Ileus). Zur Vollständigkeit: Perkussion = Abklopfen.",
+          "Laborwerte im Serum – Leber: GOT (AST) und GPT (ALT) – Leberzellenzyme, steigen bei Leberzellschaden; γ-GT – empfindlicher Wert bei Gallenstau und Alkohol; AP (alkalische Phosphatase) – Gallenstau (auch Knochen); Bilirubin – Gelbsucht; außerdem Syntheseleistung: Albumin, Quick/INR, Cholinesterase (CHE). Pankreas: Lipase (spezifischster Wert bei akuter Pankreatitis), α-Amylase bzw. Pankreas-Amylase; endokrin: Blutzucker und HbA1c. (Elastase wird im Stuhl gemessen und zeigt die exokrine Funktion.)",
+          "iFOB-Test (immunologischer fäkaler okkulter Bluttest) dem Patienten erklären: Der Test sucht mit Antikörpern nach verborgenem (okkultem) menschlichem Blut im Stuhl, das z. B. von Polypen oder Darmkrebs stammen kann. Keine Diät nötig. Ablauf: Röhrchen beschriften (Name, Geburtsdatum, Datum der Probe), Stuhl auf Auffangpapier o. Ä. auffangen – nicht aus dem Toilettenwasser und nicht mit Urin vermischen, mit dem Stäbchen an mehreren Stellen in den Stuhl stechen, Stäbchen ins Röhrchen stecken und fest verschließen, Probe möglichst schnell (innerhalb weniger Tage, kühl gelagert) in die Praxis zurückbringen. Nicht während der Periode oder bei blutenden Hämorrhoiden. Ein positiver Befund muss immer durch eine Darmspiegelung (Koloskopie) abgeklärt werden. Gesetzlich Versicherte ab 50 Jahren: iFOBT alle 2 Jahre oder alternativ 2 Vorsorge-Koloskopien im Abstand von 10 Jahren.",
+          "Sonografie (Ultraschall) erklären und vorbereiten: Die Untersuchung arbeitet mit Schallwellen, ist schmerzfrei und ohne Röntgenstrahlung, deshalb auch in der Schwangerschaft möglich. Vorbereitung für eine Oberbauchsonografie (Leber, Galle, Pankreas): nüchtern kommen (ca. 6–8 Stunden nichts essen), kein Kaffee, keine kohlensäurehaltigen Getränke, nicht rauchen, kein Kaugummi – Luft im Darm stört das Bild und die Gallenblase ist nur nüchtern gut gefüllt; Medikamente mit etwas stillem Wasser nach ärztlicher Absprache. Für Blase/Unterbauch: volle Harnblase (ca. 1 l trinken, nicht zur Toilette). Ablauf: Patient liegt auf dem Rücken, Bauch frei, kaltes Kontaktgel wird aufgetragen, der Schallkopf wird aufgesetzt, Atemkommandos („tief einatmen und Luft anhalten“), Dauer ca. 10–20 Minuten, danach Gel abwischen – der Patient kann sofort wieder essen."
+        ],
+        example: "Patient am Telefon: „Ich habe morgen um 8 Uhr Ultraschall vom Bauch.“ – Du sagst: „Bitte ab heute 22 Uhr nichts mehr essen, morgen früh keinen Kaffee, nicht rauchen, kein Kaugummi. Ihre Tabletten dürfen Sie nach Absprache mit einem Schluck stillem Wasser nehmen. Ein Handtuch können Sie gern mitbringen.“",
+        practice: {
+          id: "dig-l9-practice",
+          prompt: "Was bedeutet „Palpation“?",
+          options: ["Untersuchung durch Abtasten", "Abhören mit dem Stethoskop", "Betrachten des Patienten"],
+          answer: 0,
+          explanation: "Palpation = Abtasten. Auskultation = Abhören. Inspektion = Betrachten."
+        },
+        test: [
+          { id: "dig-l9-q1", type: "table", prompt: "Ordne den Begriff zu.", rows: [
+            { label: "Abhören mit dem Stethoskop", accepted: ["auskultation"], expected: "Auskultation" },
+            { label: "Betrachten", accepted: ["inspektion"], expected: "Inspektion" },
+            { label: "Erheben der Krankengeschichte", accepted: ["anamnese"], expected: "Anamnese" },
+            { label: "Tastbarer Widerstand bei der Palpation", accepted: ["resistenz"], expected: "Resistenz" }
+          ], explanation: "Anamnese, Inspektion, Palpation (mit Resistenz), Auskultation." },
+          { id: "dig-l9-q2", prompt: "Welcher Laborwert gehört zum Pankreas?", options: ["Lipase", "GPT (ALT)", "γ-GT"], answer: 0, explanation: "Lipase (und Amylase) = Pankreas. GOT, GPT, γ-GT, AP, Bilirubin = Leber/Galle." },
+          { id: "dig-l9-q3", prompt: "Was sagst du einem Patienten zur Vorbereitung einer Oberbauchsonografie?", options: ["Bitte nüchtern kommen, nicht rauchen, keine kohlensäurehaltigen Getränke.", "Bitte vorher eine große Mahlzeit essen, damit die Gallenblase leer ist.", "Bitte am Vortag Abführmittel nehmen und 3 Tage fleischfrei essen."], answer: 0, explanation: "Nüchtern: weniger Darmgas, gefüllte Gallenblase – beides verbessert das Ultraschallbild." }
+        ],
+        recap: ["Anamnese (Gespräch), Inspektion (Betrachten), Palpation (Abtasten; Resistenz = tastbarer Widerstand), Auskultation (Abhören).", "Leber: GOT, GPT, γ-GT, AP, Bilirubin (+ Albumin, Quick). Pankreas: Lipase, Amylase (+ BZ, HbA1c).", "iFOBT: Antikörper-Test auf okkultes Blut, keine Diät, Stuhl nicht aus dem Toilettenwasser, Probe schnell zurück, positiv → Koloskopie; ab 50 alle 2 Jahre.", "Oberbauch-Sono: nüchtern (6–8 h), nicht rauchen, keine Kohlensäure/kein Kaugummi; schmerzfrei, ohne Strahlung, Gel, Atemkommandos."]
+      }
+    ],
+    cards: [
+      { front: "Fachbegriff: Mundhöhle", back: "Cavum oris" },
+      { front: "Fachbegriff: Rachen", back: "Pharynx" },
+      { front: "Fachbegriff: Speiseröhre", back: "Ösophagus (Oesophagus)" },
+      { front: "Fachbegriff: Magen", back: "Gaster (gr.) bzw. Ventriculus (lat.) – daher „gastro-“" },
+      { front: "Fachbegriff: Zwölffingerdarm", back: "Duodenum" },
+      { front: "Fachbegriff: Leerdarm / Krummdarm", back: "Jejunum / Ileum" },
+      { front: "Fachbegriff: Dünndarm / Dickdarm", back: "Intestinum tenue / Intestinum crassum (Darm allgemein: Enteron, „entero-“)" },
+      { front: "Fachbegriff: Blinddarm und Wurmfortsatz", back: "Caecum und Appendix vermiformis" },
+      { front: "Fachbegriff: Mastdarm / After", back: "Rektum (Rectum) / Anus (Proktos, „prokto-“)" },
+      { front: "Fachbegriff: Leber", back: "Hepar („hepato-“)" },
+      { front: "Fachbegriff: Gallenblase / Galle", back: "Vesica biliaris (fellea) / Bilis, Chole („chole-“)" },
+      { front: "Fachbegriff: Bauchspeicheldrüse", back: "Pankreas" },
+      { front: "Gastritis", back: "Entzündung der Magenschleimhaut" },
+      { front: "Ulcus ventriculi / Ulcus duodeni", back: "Magengeschwür / Zwölffingerdarmgeschwür" },
+      { front: "Refluxösophagitis", back: "Entzündung der Speiseröhre durch zurückfließenden Magensaft (Leitsymptom Sodbrennen = Pyrosis)" },
+      { front: "Hepatitis / Leberzirrhose", back: "Leberentzündung / bindegewebiger Umbau und Schrumpfung der Leber mit Funktionsverlust" },
+      { front: "Steatosis hepatis", back: "Fettleber" },
+      { front: "Cholezystitis / Cholelithiasis", back: "Gallenblasenentzündung / Gallensteinleiden" },
+      { front: "Pankreatitis", back: "Entzündung der Bauchspeicheldrüse (Leitwert: Lipase ↑)" },
+      { front: "Appendizitis", back: "Entzündung des Wurmfortsatzes (umgangssprachlich „Blinddarmentzündung“)" },
+      { front: "Divertikel / Divertikulitis", back: "Ausstülpung der Darmwand / deren Entzündung (meist im Sigma)" },
+      { front: "Ileus", back: "Darmverschluss bzw. Darmlähmung – Notfall" },
+      { front: "Ikterus", back: "Gelbsucht: Gelbfärbung von Haut und Skleren durch erhöhtes Bilirubin" },
+      { front: "Aszites", back: "Bauchwassersucht: Flüssigkeit in der freien Bauchhöhle" },
+      { front: "Nausea / Emesis / Hämatemesis", back: "Übelkeit / Erbrechen / Bluterbrechen" },
+      { front: "Diarrhö / Obstipation", back: "Durchfall / Verstopfung" },
+      { front: "Meteorismus / Flatulenz", back: "Blähbauch (Gasansammlung) / Abgang von Darmgasen" },
+      { front: "Meläna / Hämatochezie", back: "Teerstuhl (schwarz, Blutung oben im Verdauungstrakt) / frisches Blut im Stuhl" },
+      { front: "Dysphagie", back: "Schluckstörung" },
+      { front: "Gastroskopie / Koloskopie / Rektoskopie", back: "Magenspiegelung / Dickdarmspiegelung / Mastdarmspiegelung (Oberbegriff: Endoskopie)" },
+      { front: "Sonografie", back: "Ultraschalluntersuchung" },
+      { front: "Hepatomegalie / Splenomegalie", back: "Lebervergrößerung / Milzvergrößerung" },
+      { front: "Kolorektales Karzinom", back: "Darmkrebs (Dickdarm/Rektum); Vorstufe meist Polypen (Adenome)" },
+      { front: "Polydipsie / Polyurie / Glukosurie", back: "Großer Durst / vermehrtes Wasserlassen / Zucker im Urin" },
+      { front: "Hyperglykämie / Hypoglykämie", back: "Überzuckerung / Unterzuckerung" },
+      { front: "Resorption", back: "Aufnahme von Stoffen aus dem Darm in Blut oder Lymphe" },
+      { front: "Peristaltik", back: "Wellenförmige Muskelbewegung, die den Inhalt aboral transportiert" },
+      { front: "Chymus / Bolus", back: "Speisebrei (Magen/Darm) / geschluckter Bissen" },
+      { front: "oral / aboral", back: "zum Mund hin / vom Mund weg" },
+      { front: "kranial / kaudal", back: "kopfwärts / steißwärts" },
+      { front: "exokrin / endokrin", back: "Abgabe über Ausführungsgang nach außen bzw. in Hohlorgan / Abgabe von Hormonen direkt ins Blut" }
+    ],
+    exam: [
+      { id: "dig-exam-1", prompt: "Welche Speicheldrüse liegt unter der Zunge?", options: ["Glandula sublingualis", "Glandula parotidea", "Glandula submandibularis"], answer: 0, explanation: "sub = unter, lingua = Zunge." },
+      { id: "dig-exam-2", prompt: "Was verschließt in der pharyngealen Phase den Nasenrachen?", options: ["Das Gaumensegel (weicher Gaumen)", "Der Kehldeckel", "Der untere Ösophagussphinkter"], answer: 0, explanation: "Gaumensegel → Nasenraum; Kehldeckel → Kehlkopf/Luftröhre." },
+      { id: "dig-exam-3", prompt: "Wie heißt der Magengrund bzw. die Magenkuppel?", options: ["Fundus", "Antrum", "Kardia"], answer: 0, explanation: "Fundus = Magengrund/-kuppel; Antrum = Pförtnervorraum; Kardia = Mageneingang." },
+      { id: "dig-exam-4", prompt: "Welche Funktion hat Gastrin?", options: ["Es regt die Bildung von Salzsäure und Pepsinogen sowie die Magenbewegung an.", "Es spaltet Eiweiße.", "Es senkt den Blutzucker."], answer: 0, explanation: "Gastrin ist ein Hormon der G-Zellen im Antrum." },
+      { id: "dig-exam-5", prompt: "Was spaltet Pepsin?", options: ["Eiweiße", "Fette", "Stärke"], answer: 0, explanation: "Pepsin beginnt im Magen die Eiweißverdauung." },
+      { id: "dig-exam-6", prompt: "Welche Strukturen vergrößern die Dünndarmoberfläche?", options: ["Kerckring-Falten, Zotten, Mikrovilli", "Haustren, Tänien, Kurvaturen", "Kardia, Fundus, Pylorus"], answer: 0, explanation: "Haustren und Tänien gehören zum Dickdarm; Kardia/Fundus/Pylorus zum Magen." },
+      { id: "dig-exam-7", type: "short", prompt: "Wie heißt der S-förmige Abschnitt des Dickdarms vor dem Rektum (Fachbegriff)?", accepted: ["colon sigmoideum", "sigma", "sigmoid", "kolon sigmoideum"], expected: "Colon sigmoideum (Sigma)", explanation: "… Colon descendens → Colon sigmoideum → Rektum." },
+      { id: "dig-exam-8", prompt: "Welcher Abschnitt wird bei einer Koloskopie (von kaudal) zuletzt erreicht?", options: ["Caecum", "Rektum", "Sigma"], answer: 0, explanation: "Von kaudal: Anus → Rektum → Sigma → … → Caecum." },
+      { id: "dig-exam-9", prompt: "Was ist KEINE Aufgabe der Leber?", options: ["Insulin bilden", "Gerinnungsfaktoren bilden", "Alkohol und Medikamente abbauen"], answer: 0, explanation: "Insulin bilden die B-Zellen des Pankreas." },
+      { id: "dig-exam-10", prompt: "Wo wird Trypsin gebildet?", options: ["Im Pankreas (als Trypsinogen)", "In den Hauptzellen des Magens", "In der Leber"], answer: 0, explanation: "Trypsinogen wird erst im Duodenum zu Trypsin aktiviert." },
+      { id: "dig-exam-11", prompt: "Welcher Wert erfüllt ein Diagnosekriterium für Diabetes mellitus?", options: ["HbA1c 6,8 %", "Nüchternglukose 105 mg/dl", "oGTT-2-h-Wert 150 mg/dl"], answer: 0, explanation: "HbA1c ≥ 6,5 % ist ein Diagnosekriterium; 105 mg/dl nüchtern und 150 mg/dl im oGTT liegen darunter." },
+      { id: "dig-exam-12", type: "table", prompt: "Typ 1 oder Typ 2?", rows: [
+        { label: "Autoimmunerkrankung, absoluter Insulinmangel", accepted: ["typ 1", "typ1", "1"], expected: "Typ 1" },
+        { label: "Insulinresistenz, oft Übergewicht", accepted: ["typ 2", "typ2", "2"], expected: "Typ 2" },
+        { label: "Häufigste Form (ca. 90 %)", accepted: ["typ 2", "typ2", "2"], expected: "Typ 2" }
+      ], explanation: "Typ 1 = autoimmun, absoluter Mangel; Typ 2 = Insulinresistenz, häufigste Form." },
+      { id: "dig-exam-13", prompt: "Welche Aussage zum iFOBT ist richtig?", options: ["Er erkennt menschliches Blut im Stuhl; eine Diät ist nicht nötig.", "Vor dem Test muss 3 Tage auf rotes Fleisch verzichtet werden.", "Die Probe wird am besten aus dem Toilettenwasser entnommen."], answer: 0, explanation: "Der immunologische Test reagiert nur auf menschliches Hämoglobin – keine Diät. Die Probe nicht aus dem Wasser entnehmen." },
+      { id: "dig-exam-14", prompt: "Was bedeutet Auskultation?", options: ["Abhören", "Abtasten", "Abklopfen"], answer: 0, explanation: "Auskultation = Abhören; Palpation = Abtasten; Perkussion = Abklopfen." },
+      { id: "dig-exam-15", prompt: "Welche Laborwerte ordnest du der Leber zu?", options: ["GOT, GPT, γ-GT, Bilirubin", "Lipase und Amylase", "Kreatinin und Harnstoff"], answer: 0, explanation: "Lipase/Amylase = Pankreas; Kreatinin/Harnstoff = Niere." }
+    ]
   }
 };
 
+// Ausbildungsberufe: gruppieren die Fächer. Neue Berufe/Fächer hier eintragen.
+export const professions = [
+  { id: "elektro", title: "Elektroniker/in für Informations- und Systemtechnik", shortTitle: "Elektroniker/in", icon: "⚡", subjects: ["politics", "network"] },
+  { id: "mfa", title: "Medizinische/r Fachangestellte/r (MFA)", shortTitle: "MFA", icon: "🩺", subjects: ["digestion"] }
+];

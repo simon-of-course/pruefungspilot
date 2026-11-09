@@ -1,6 +1,6 @@
-import { subjects as rawSubjects } from "./content.js";
-import { levelExtras, studyTips, operators, videos } from "./extras.js";
-import { renderDiagram } from "./diagrams.js";
+import { subjects as rawSubjects, professions } from "./content.js?v=5";
+import { levelExtras, studyTips, operators, videos } from "./extras.js?v=5";
+import { renderDiagram } from "./diagrams.js?v=5";
 import { initCloud, signIn, signOut, schedulePush } from "./cloud.js";
 
 /* ---------- Daten zusammenführen ---------- */
@@ -23,6 +23,13 @@ for (const [sid, s] of Object.entries(rawSubjects)) {
   };
 }
 const SUBJECT_IDS = Object.keys(subjects);
+const PROFESSIONS = professions.map((p) => ({ ...p, subjects: p.subjects.filter((id) => subjects[id]) }));
+function activeProfession() { return PROFESSIONS.find((p) => p.id === state.settings.profession) || null; }
+function visibleSids() { return activeProfession()?.subjects || SUBJECT_IDS; }
+const inScope = (sid) => visibleSids().includes(sid);
+const visibleMissed = () => Object.entries(state.missed).filter(([id, m]) => questionIndex.has(id) && inScope(m.sid));
+const visibleDue = () => dueCards().filter((c) => inScope(c.sid));
+const joinDe = (list) => (list.length < 2 ? list.join("") : `${list.slice(0, -1).join(", ")} und ${list[list.length - 1]}`);
 
 const questionIndex = new Map();
 for (const s of Object.values(subjects)) {
@@ -66,7 +73,7 @@ function defaultState() {
     streak: { count: 0, last: null },
     activity: {},
     stats: { reviews: 0, answered: 0, correct: 0, pomodoros: 0 },
-    settings: { theme: "auto", freeMode: false, examDates: {} },
+    settings: { theme: "auto", freeMode: false, examDates: {}, profession: "" },
     badges: [],
     lastVisit: null
   };
@@ -131,7 +138,7 @@ const BADGES = [
   { id: "perfect", icon: "⭐", title: "Volltreffer", desc: "Einen Level-Check mit 100 % abgeschlossen", test: () => SUBJECT_IDS.some((id) => Object.values(state.subjects[id].best).some((b) => b >= 100)) },
   { id: "subject-done", icon: "🏁", title: "Fach durchgespielt", desc: "Alle Level eines Fachs bestanden", test: () => SUBJECT_IDS.some((id) => state.subjects[id].completed.length === subjects[id].levels.length) },
   { id: "exam", icon: "🎓", title: "Prüfung bestanden", desc: "Eine Prüfungssimulation mit mind. 75 %", test: () => SUBJECT_IDS.some((id) => state.subjects[id].examPassed) },
-  { id: "both-exams", icon: "🏆", title: "Doppelt sicher", desc: "Beide Prüfungssimulationen bestanden", test: () => SUBJECT_IDS.every((id) => state.subjects[id].examPassed) },
+  { id: "both-exams", icon: "🏆", title: "Doppelt sicher", desc: "Zwei Prüfungssimulationen bestanden", test: () => SUBJECT_IDS.filter((id) => state.subjects[id].examPassed).length >= 2 },
   { id: "streak3", icon: "🔥", title: "Dranbleiber/in", desc: "3 Tage in Folge gelernt", test: () => state.streak.count >= 3 },
   { id: "streak7", icon: "🚀", title: "Wochenserie", desc: "7 Tage in Folge gelernt", test: () => state.streak.count >= 7 },
   { id: "cards50", icon: "🗂️", title: "Kartenprofi", desc: "50 Karteikarten wiederholt", test: () => state.stats.reviews >= 50 },
@@ -272,12 +279,46 @@ function videoBlock(list, key) {
 
 /* ---------- Werkzeuge ---------- */
 const TOOLS = {
-  subnet: { title: "Subnetz-Rechner", icon: "🧮" },
-  "hex-db": { title: "Zahlensysteme & Dezibel", icon: "🔢" },
-  seats: { title: "Sitzverteilung (Sainte-Laguë)", icon: "🗳️" },
-  "osi-game": { title: "OSI-Sortierspiel", icon: "🧩" },
+  subnet: { title: "Subnetz-Rechner", icon: "🧮", sids: ["network"] },
+  "hex-db": { title: "Zahlensysteme & Dezibel", icon: "🔢", sids: ["network"] },
+  seats: { title: "Sitzverteilung (Sainte-Laguë)", icon: "🗳️", sids: ["politics"] },
+  "osi-game": { title: "OSI-Sortierspiel", icon: "🧩", sids: ["network"] },
+  "tract-game": { title: "Verdauungsweg-Sortierspiel", icon: "🧩", sids: ["digestion"] },
+  "colon-game": { title: "Dickdarm-Sortierspiel", icon: "🧩", sids: ["digestion"] },
   pomodoro: { title: "Fokus-Timer (Pomodoro)", icon: "⏱️" }
 };
+// Sortierspiele: Elemente in der richtigen Reihenfolge anklicken.
+const SORT_GAMES = {
+  "osi-game": {
+    items: ["Bitübertragung", "Sicherung", "Vermittlung", "Transport", "Sitzung", "Darstellung", "Anwendung"],
+    intro: "Klicke die Schichten in der richtigen Reihenfolge – <strong>von Schicht 1 (unten) bis 7 (oben)</strong>.",
+    ask: (n) => `Welche Schicht ist Nr. ${n}?`, stackTop: true,
+    hint: (i) => `gesucht ist Schicht ${i + 1}. Tipp: ${["„Bitte“", "„Suche“", "„Vernünftige“", "„Transporte“", "„Seit“", "„Dem“", "„Abend“"][i]}`
+  },
+  "tract-game": {
+    items: ["Mundhöhle (Cavum oris)", "Rachen (Pharynx)", "Speiseröhre (Ösophagus)", "Magen (Gaster)", "Zwölffingerdarm (Duodenum)", "Leerdarm (Jejunum)", "Krummdarm (Ileum)", "Blinddarm (Caecum)", "Grimmdarm (Colon)", "Mastdarm (Rektum)", "After (Anus)"],
+    intro: "Klicke die Stationen in der Reihenfolge, in der die Nahrung sie durchläuft – <strong>vom Mund bis zum After</strong>.",
+    ask: (n) => `Welche Station kommt als ${n}.?`
+  },
+  "colon-game": {
+    items: ["Caecum (Blinddarm)", "Colon ascendens", "Flexura coli dextra", "Colon transversum", "Flexura coli sinistra", "Colon descendens", "Colon sigmoideum (Sigma)", "Rektum (Mastdarm)", "Anus (After)"],
+    intro: "Ordne die Dickdarmabschnitte <strong>von kranial nach kaudal</strong> (Weg des Stuhls). Mit „Richtung wechseln“ übst du die Reihenfolge von kaudal.",
+    reversible: true, ask: (n) => `Welcher Abschnitt kommt als ${n}.?`
+  }
+};
+function sortItems(el) {
+  const g = SORT_GAMES[el.dataset.tool];
+  return el.dataset.dir === "rev" ? [...g.items].reverse() : g.items;
+}
+function initSortGame(el) {
+  const g = SORT_GAMES[el.dataset.tool];
+  el.dataset.next = "0";
+  el.dataset.errors = "0";
+  const items = sortItems(el);
+  const dir = g.reversible ? `<p class="small muted">Richtung: <b>${el.dataset.dir === "rev" ? "von kaudal nach kranial" : "von kranial nach kaudal"}</b> <button type="button" class="btn small" data-action="sort-reverse">Richtung wechseln</button></p>` : "";
+  el.querySelector("[data-board]").innerHTML = `${dir}<div class="osi-stack" data-stack></div><div class="osi-pool">${shuffle(items.map((n, i) => [n, i])).map(([n, i]) => `<button type="button" class="chip big" data-action="sort-pick" data-i="${i}">${esc(n)}</button>`).join("")}</div><p class="small" data-status>${esc(g.ask(1))}</p>`;
+}
+
 function toolHtml(id) {
   if (id === "subnet") return `<div class="tool" data-tool="subnet">
     <div class="tool-inputs"><label>IPv4-Adresse<input class="input mono" name="ip" value="192.168.10.77"></label><label>Präfix /<input class="input mono" name="prefix" type="number" min="0" max="32" value="26"></label></div>
@@ -297,7 +338,7 @@ function toolHtml(id) {
       <div class="tool-out" data-out></div>
       <p class="muted small">Vereinfachung: 630 Sitze, ohne Grundmandatsklausel, Minderheitenregel (SSW) und Verteilung auf Landeslisten.</p></div>`;
   }
-  if (id === "osi-game") return `<div class="tool" data-tool="osi-game"><p>Klicke die Schichten in der richtigen Reihenfolge – <strong>von Schicht 1 (unten) bis 7 (oben)</strong>.</p><div class="osi-game" data-board></div></div>`;
+  if (SORT_GAMES[id]) return `<div class="tool" data-tool="${id}"><p>${SORT_GAMES[id].intro}</p><div class="osi-game" data-board></div></div>`;
   if (id === "pomodoro") return `<div class="tool" data-tool="pomodoro"><div class="pomo-big"><span data-pomo-time>${fmtPomo()}</span><span class="muted" data-pomo-mode>${pomo.mode === "focus" ? "Fokus" : "Pause"}</span></div>
     <div class="btn-row"><button class="btn primary" data-action="pomo-toggle" data-pomo-btn>${pomo.running ? "Pausieren" : "Starten"}</button><button class="btn" data-action="pomo-reset">Zurücksetzen</button></div>
     <p class="muted small">25 Minuten konzentriert lernen, 5 Minuten Pause. Handy weg, eine Aufgabe, dann belohnen.</p></div>`;
@@ -378,14 +419,6 @@ function updateTool(el) {
   }
 }
 
-function initOsiGame(el) {
-  const names = ["Bitübertragung", "Sicherung", "Vermittlung", "Transport", "Sitzung", "Darstellung", "Anwendung"];
-  el.dataset.next = "0";
-  el.dataset.errors = "0";
-  const board = el.querySelector("[data-board]");
-  board.innerHTML = `<div class="osi-stack" data-stack></div><div class="osi-pool">${shuffle(names.map((n, i) => [n, i])).map(([n, i]) => `<button type="button" class="chip big" data-action="osi-pick" data-i="${i}">${n}</button>`).join("")}</div><p class="small" data-status>Welche Schicht ist Nr. 1?</p>`;
-}
-
 /* ---------- Pomodoro ---------- */
 const pomo = { mode: "focus", remaining: 25 * 60, running: false, endAt: 0, timer: null };
 function fmtPomo() { const r = Math.max(0, Math.round(pomo.remaining)); return `${String(Math.floor(r / 60)).padStart(2, "0")}:${String(r % 60).padStart(2, "0")}`; }
@@ -445,7 +478,7 @@ function render() {
   app.innerHTML = html;
   if (path && !/pruefung|training/.test(path)) state.lastVisit = "#/" + path;
   save();
-  $$("[data-tool]", app).forEach((el) => (el.dataset.tool === "osi-game" ? initOsiGame(el) : updateTool(el)));
+  $$("[data-tool]", app).forEach((el) => (SORT_GAMES[el.dataset.tool] ? initSortGame(el) : updateTool(el)));
   const sid = path.match(/^fach\/(\w+)/)?.[1];
   document.body.dataset.subject = sid || "";
   updateChrome(path);
@@ -460,16 +493,17 @@ function render() {
 function updateChrome(path = location.hash.replace(/^#\/?/, "").split("?")[0]) {
   const nav = $("#nav");
   if (!nav) return;
-  const due = dueCards().length;
-  const missed = Object.keys(state.missed).length;
+  const due = visibleDue().length;
+  const missed = visibleMissed().length;
   const item = (href, icon, label, badge = "") => {
     const active = href === "#/" ? path === "" : path.startsWith(href.slice(2));
     return `<a class="nav-item ${active ? "active" : ""}" href="${href}"${active ? ' aria-current="page"' : ""}><span class="nav-ico" aria-hidden="true">${icon}</span><span>${label}</span>${badge !== "" && badge !== 0 ? `<span class="nav-badge">${badge}</span>` : ""}</a>`;
   };
   nav.innerHTML = `
     ${item("#/", "🏠", "Übersicht")}
-    <p class="nav-label">Fächer</p>
-    ${SUBJECT_IDS.map((id) => item(`#/fach/${id}`, subjects[id].icon, subjects[id].shortTitle, `${subjectProgress(id)}%`)).join("")}
+    <label class="nav-label" for="nav-profession">Ausbildungsberuf</label>
+    <select id="nav-profession" class="input nav-select" data-setting="profession">${professionOptions()}</select>
+    ${navSubjectGroups().map(([label, ids]) => `<p class="nav-label">${esc(label)}</p>${ids.map((id) => item(`#/fach/${id}`, subjects[id].icon, subjects[id].shortTitle, `${subjectProgress(id)}%`)).join("")}`).join("")}
     <p class="nav-label">Üben</p>
     ${item("#/training", "🔀", "Gemischtes Training")}
     ${item("#/karten", "🗂️", "Karteikarten", due)}
@@ -484,16 +518,31 @@ function updateChrome(path = location.hash.replace(/^#\/?/, "").split("?")[0]) {
   $("#hud").innerHTML = `<span class="hud-chip" title="Lernserie">🔥 ${currentStreak()}</span><span class="hud-chip" title="Erfahrungspunkte – ${r.name}">⚡ ${state.xp} XP</span>`;
 }
 
+function professionOptions() {
+  return `<option value="">Alle Berufe</option>${PROFESSIONS.map((p) => `<option value="${p.id}" ${state.settings.profession === p.id ? "selected" : ""}>${esc(p.icon)} ${esc(p.title)}</option>`).join("")}`;
+}
+// Fächer nach Beruf gruppiert: [[Überschrift, [Fach-IDs]], …]
+function navSubjectGroups() {
+  const p = activeProfession();
+  if (p) return [["Fächer", p.subjects]];
+  const groups = PROFESSIONS.filter((x) => x.subjects.length).map((x) => [`${x.icon} ${x.shortTitle}`, x.subjects]);
+  const rest = SUBJECT_IDS.filter((id) => !PROFESSIONS.some((x) => x.subjects.includes(id)));
+  if (rest.length) groups.push(["Weitere Fächer", rest]);
+  return groups;
+}
+
 /* --- Übersicht --- */
 function viewHome() {
   const t = localDate();
   const r = rank(state.xp);
   const tip = studyTips[new Date().getDate() % studyTips.length];
   const cont = state.lastVisit && state.lastVisit !== "#/" ? state.lastVisit : null;
-  const firstNext = SUBJECT_IDS.map((id) => [id, nextLevel(id)]).find(([, n]) => n !== null);
-  const due = dueCards().length;
-  const missed = Object.keys(state.missed).length;
-  const countdowns = SUBJECT_IDS.filter((id) => state.settings.examDates[id]).map((id) => {
+  const sids = visibleSids();
+  const firstNext = sids.map((id) => [id, nextLevel(id)]).find(([, n]) => n !== null);
+  const due = visibleDue().length;
+  const missed = visibleMissed().length;
+  const prof = activeProfession();
+  const countdowns = sids.filter((id) => state.settings.examDates[id]).map((id) => {
     const d = daysBetween(t, state.settings.examDates[id]);
     return `<div class="countdown"><b>${d >= 0 ? d : "–"}</b><span>Tage bis ${esc(subjects[id].shortTitle)}</span></div>`;
   }).join("");
@@ -502,7 +551,7 @@ function viewHome() {
     <div>
       <p class="eyebrow">${greeting()}</p>
       <h1>Klar lernen. <span class="grad">Sicher bestehen.</span></h1>
-      <p class="lead">Dein Lernpfad für <strong>Politik</strong> und <strong>Netzwerktechnik</strong>: kurze Lektionen mit Grafiken und Videos, aktive Übungen, Karteikarten mit Wiederholungsplan und echte Prüfungssimulationen.</p>
+      <p class="lead">Dein Lernpfad für ${joinDe(sids.map((id) => `<strong>${esc(subjects[id].shortTitle)}</strong>`))}${prof ? ` (${esc(prof.title)})` : ""}: kurze Lektionen mit Grafiken und Videos, aktive Übungen, Karteikarten mit Wiederholungsplan und echte Prüfungssimulationen.</p>
       <div class="btn-row">
         ${cont ? `<a class="btn primary" href="${esc(cont)}">▶ Weiterlernen</a>` : firstNext ? `<a class="btn primary" href="#/fach/${firstNext[0]}/level/${firstNext[1]}/1">▶ Jetzt starten</a>` : `<a class="btn primary" href="#/training">▶ Training starten</a>`}
         <a class="btn" href="#/lernen">So lernst du hier</a>
@@ -517,8 +566,9 @@ function viewHome() {
     </div>
   </section>
 
-  <h2 class="section-title">Deine Fächer</h2>
-  <div class="grid two">${SUBJECT_IDS.map(subjectCard).join("")}</div>
+  <div class="section-head"><h2 class="section-title">Deine Fächer</h2></div>
+  <div class="chips" role="group" aria-label="Ausbildungsberuf wählen"><button class="chip ${prof ? "" : "active"}" data-action="set-profession" data-id="">Alle Berufe</button>${PROFESSIONS.map((p) => `<button class="chip ${prof?.id === p.id ? "active" : ""}" data-action="set-profession" data-id="${p.id}">${esc(p.icon)} ${esc(p.title)}</button>`).join("")}</div>
+  ${navSubjectGroups().map(([label, ids]) => `${prof ? "" : `<h3 class="group-title">${esc(label)}</h3>`}<div class="grid two">${ids.map(subjectCard).join("")}</div>`).join("")}
 
   <div class="grid two">
     <section class="card">
@@ -526,7 +576,7 @@ function viewHome() {
       <ol class="todo">
         ${due ? `<li><a href="#/karten">${due} Karteikarten wiederholen</a> <span class="muted small">≈ ${Math.ceil(due * 0.3)} Min.</span></li>` : ""}
         ${missed ? `<li><a href="#/wiederholen">${missed} falsch beantwortete Fragen nacharbeiten</a></li>` : ""}
-        ${SUBJECT_IDS.map((id) => { const n = nextLevel(id); return n === null ? "" : `<li><a href="#/fach/${id}/level/${n}/1">${esc(subjects[id].shortTitle)} · Level ${n + 1}: ${esc(subjects[id].levels[n].title)}</a></li>`; }).join("")}
+        ${sids.map((id) => { const n = nextLevel(id); return n === null ? "" : `<li><a href="#/fach/${id}/level/${n}/1">${esc(subjects[id].shortTitle)} · Level ${n + 1}: ${esc(subjects[id].levels[n].title)}</a></li>`; }).join("")}
         <li><a href="#/training">10 gemischte Fragen (Interleaving)</a></li>
       </ol>
     </section>
@@ -637,7 +687,7 @@ function viewLevel(sid, nStr, stepStr) {
       <h2>Was weißt du schon?</h2>
       <p class="muted">Rate ruhig! Wer sich vor dem Lernen kurz an einer Frage versucht, merkt sich die Erklärung danach deutlich besser (Pretesting-Effekt).</p>
       <div class="goal"><b>🎯 Lernziel:</b> ${esc(l.goal)}</div>
-      ${l.practice ? `<form class="quiz" data-form="practice" data-sid="${sid}" data-level="${n}">${renderQuestion(l.practice, "?")}<div class="btn-row"><button class="btn primary" type="submit">Antwort prüfen</button></div></form>` : ""}
+      ${l.practice ? `<form class="quiz" data-form="practice" data-sid="${sid}" data-level="${n}">${renderQuestion(l.practice, "?", { shuffleOptions: true })}<div class="btn-row"><button class="btn primary" type="submit">Antwort prüfen</button></div></form>` : ""}
     </section>${nav(false, true, "Zur Erklärung")}`;
   }
 
@@ -701,7 +751,7 @@ function viewLevel(sid, nStr, stepStr) {
 
 function taskHtml(t) {
   if (t.type === "table") {
-    return `<section class="card"><h3>📋 ${esc(t.title)}</h3><p>${esc(t.prompt)}</p>
+    return `<section class="card"><h3>📋 ${esc(t.title)}</h3><p>${esc(t.prompt)}</p>${t.diagram ? `<figure class="diagram">${renderDiagram(t.diagram)}</figure>` : ""}
       <form class="quiz" data-form="task-table" data-task="${esc(t.id)}"><div class="table-q">${t.rows.map((r, i) => `<label class="table-row"><span>${esc(r.label)}</span><input class="input" name="r${i}" autocomplete="off"><em class="solution" hidden>${esc(r.expected)}</em></label>`).join("")}</div>
       <div class="btn-row"><button class="btn primary" type="submit">Prüfen</button><button class="btn" type="button" data-action="show-solution">Lösung zeigen</button></div><div data-result></div></form></section>`;
   }
@@ -720,13 +770,13 @@ Object.values(subjects).forEach((s) => s.levels.forEach((l) => l.tasks.forEach((
 /* --- Karteikarten --- */
 function viewCards(sid) {
   const title = sid ? `Karteikarten · ${subjects[sid].shortTitle}` : "Karteikarten";
-  const pool = CARDS.filter((c) => (!sid || c.sid === sid) && cardAvailable(c));
+  const pool = CARDS.filter((c) => (sid ? c.sid === sid : inScope(c.sid)) && cardAvailable(c));
   const boxes = [0, 1, 2, 3, 4, 5].map((b) => pool.filter((c) => (state.cards[c.id]?.box || 0) === b).length);
-  if (!cardSession || cardSession.sid !== sid) cardSession = { sid, queue: shuffle(dueCards(sid)).slice(0, 25).map((c) => c.id), flipped: false, done: 0, known: 0 };
+  if (!cardSession || cardSession.sid !== sid) cardSession = { sid, queue: shuffle(dueCards(sid).filter((c) => sid || inScope(c.sid))).slice(0, 25).map((c) => c.id), flipped: false, done: 0, known: 0 };
   const cur = CARDS.find((c) => c.id === cardSession.queue[0]);
   return `<nav class="crumbs"><a href="#/">Übersicht</a> / ${sid ? `<a href="#/fach/${sid}">${esc(subjects[sid].shortTitle)}</a> / ` : ""}<span>Karteikarten</span></nav>
   <header class="page-head slim"><div><h1>${esc(title)}</h1><p class="muted">Leitner-System: Gewusste Karten wandern ein Fach weiter und kommen seltener (1 → 3 → 7 → 14 → 30 Tage). Nicht gewusste starten wieder in Fach 1.</p></div></header>
-  ${!sid ? `<div class="chips">${SUBJECT_IDS.map((id) => `<a class="chip" href="#/fach/${id}/karten">${esc(subjects[id].icon)} ${esc(subjects[id].shortTitle)}</a>`).join("")}</div>` : ""}
+  ${!sid ? `<div class="chips">${visibleSids().map((id) => `<a class="chip" href="#/fach/${id}/karten">${esc(subjects[id].icon)} ${esc(subjects[id].shortTitle)}</a>`).join("")}</div>` : ""}
   <div class="leitner">${boxes.map((b, i) => `<div class="lbox"><b>${b}</b><span>${i === 0 ? "neu" : `Fach ${i}`}</span></div>`).join("")}</div>
   ${cur ? `<div class="flashcard ${cardSession.flipped ? "flipped" : ""}" data-action="flip" tabindex="0" role="button" aria-label="Karte umdrehen">
       <div class="fc-inner"><div class="fc-face fc-front"><span class="eyebrow">${esc(subjects[cur.sid].shortTitle)} · Frage</span><p>${esc(cur.front)}</p><span class="muted small">Antwort im Kopf formulieren – dann tippen/Leertaste zum Umdrehen</span></div>
@@ -829,7 +879,7 @@ function viewTraining() {
     return `<nav class="crumbs"><a href="#/">Übersicht</a> / <span>Training</span></nav>
     <header class="page-head slim"><div><h1>🔀 Gemischtes Training</h1><p class="lead">Fragen aus verschiedenen Leveln gemischt – du musst jedes Mal selbst erkennen, welches Wissen gefragt ist (Interleaving). Sofortige Rückmeldung nach jeder Frage.</p></div></header>
     <section class="card"><form data-form="training-setup">
-      <fieldset class="plain"><legend>Fächer</legend>${SUBJECT_IDS.map((id) => `<label class="check"><input type="checkbox" name="sid" value="${id}" ${!chosen || chosen === id ? "checked" : ""}> ${esc(subjects[id].icon)} ${esc(subjects[id].title)}</label>`).join("")}</fieldset>
+      <fieldset class="plain"><legend>Fächer</legend>${visibleSids().map((id) => `<label class="check"><input type="checkbox" name="sid" value="${id}" ${!chosen || chosen === id ? "checked" : ""}> ${esc(subjects[id].icon)} ${esc(subjects[id].title)}</label>`).join("")}</fieldset>
       <fieldset class="plain"><legend>Anzahl Fragen</legend><div class="chips">${[5, 10, 20].map((n) => `<label class="chip"><input type="radio" name="count" value="${n}" ${n === 10 ? "checked" : ""}> ${n}</label>`).join("")}</div></fieldset>
       <label class="check"><input type="checkbox" name="all"> Auch Fragen aus noch gesperrten Leveln</label>
       <div class="btn-row"><button class="btn primary big" type="submit">Training starten</button></div></form></section>`;
@@ -858,7 +908,7 @@ function startTraining(ids, mode = "mixed") {
 
 /* --- Fehler --- */
 function viewMissed() {
-  const entries = Object.entries(state.missed).filter(([id]) => questionIndex.has(id)).sort((a, b) => b[1].count - a[1].count);
+  const entries = visibleMissed().sort((a, b) => b[1].count - a[1].count);
   return `<nav class="crumbs"><a href="#/">Übersicht</a> / <span>Fehler wiederholen</span></nav>
   <header class="page-head slim"><div><h1>🔁 Fehler wiederholen</h1><p class="lead">Jede falsch beantwortete Frage landet hier. Beantwortest du sie im Training richtig, verschwindet sie. Gezielt Fehler nacharbeiten ist die effizienteste Lernzeit.</p></div></header>
   ${entries.length ? `<div class="btn-row"><button class="btn primary big" data-action="train-missed">Alle ${entries.length} Fehler üben</button></div>
@@ -869,11 +919,12 @@ function viewMissed() {
 /* --- Glossar --- */
 function viewGlossary() {
   const terms = [];
-  Object.values(subjects).forEach((s) => s.levels.forEach((l, n) => (l.keyTerms || []).forEach((k) => terms.push({ ...k, sid: s.id, n, lt: l.title }))));
+  const sids = visibleSids();
+  sids.map((id) => subjects[id]).forEach((s) => s.levels.forEach((l, n) => (l.keyTerms || []).forEach((k) => terms.push({ ...k, sid: s.id, n, lt: l.title }))));
   terms.sort((a, b) => a.term.localeCompare(b.term, "de"));
   return `<nav class="crumbs"><a href="#/">Übersicht</a> / <span>Glossar</span></nav>
-  <header class="page-head slim"><div><h1>📖 Glossar</h1><p class="lead">${terms.length} Fachbegriffe aus beiden Fächern.</p></div></header>
-  <div class="search"><input class="input" type="search" placeholder="Begriff suchen …" data-filter=".glossary .term-item" aria-label="Glossar durchsuchen"><div class="chips">${SUBJECT_IDS.map((id) => `<button class="chip" data-action="gloss-filter" data-sid="${id}">${esc(subjects[id].icon)} ${esc(subjects[id].shortTitle)}</button>`).join("")}<button class="chip active" data-action="gloss-filter" data-sid="">Alle</button></div></div>
+  <header class="page-head slim"><div><h1>📖 Glossar</h1><p class="lead">${terms.length} Fachbegriffe aus ${sids.length === 1 ? "dem Fach" : "den Fächern"} ${joinDe(sids.map((id) => esc(subjects[id].shortTitle)))}.</p></div></header>
+  <div class="search"><input class="input" type="search" placeholder="Begriff suchen …" data-filter=".glossary .term-item" aria-label="Glossar durchsuchen"><div class="chips">${sids.map((id) => `<button class="chip" data-action="gloss-filter" data-sid="${id}">${esc(subjects[id].icon)} ${esc(subjects[id].shortTitle)}</button>`).join("")}<button class="chip active" data-action="gloss-filter" data-sid="">Alle</button></div></div>
   <dl class="glossary">${terms.map((t) => `<div class="card term-item theme-${t.sid}" data-sid="${t.sid}"><dt>${esc(t.term)}</dt><dd>${esc(t.def)}</dd><a class="small" href="#/fach/${t.sid}/level/${t.n}/2">${esc(subjects[t.sid].shortTitle)} · Level ${t.n + 1}: ${esc(t.lt)}</a></div>`).join("")}</dl>`;
 }
 
@@ -881,13 +932,13 @@ function viewGlossary() {
 function viewTools() {
   return `<nav class="crumbs"><a href="#/">Übersicht</a> / <span>Werkzeuge</span></nav>
   <header class="page-head slim"><div><h1>🛠️ Werkzeuge</h1><p class="lead">Interaktiv ausprobieren statt nur lesen. Tipp: Erst im Kopf rechnen, dann mit dem Werkzeug kontrollieren.</p></div></header>
-  <div class="grid two">${Object.entries(TOOLS).map(([id, t]) => `<section class="card" id="tool-${id}"><h2>${t.icon} ${esc(t.title)}</h2>${toolHtml(id)}</section>`).join("")}</div>`;
+  <div class="grid two">${Object.entries(TOOLS).filter(([, t]) => !t.sids || t.sids.some(inScope)).map(([id, t]) => `<section class="card" id="tool-${id}"><h2>${t.icon} ${esc(t.title)}</h2>${toolHtml(id)}</section>`).join("")}</div>`;
 }
 
 /* --- Lernplan --- */
 function viewPlan() {
   const t = localDate();
-  const plans = SUBJECT_IDS.map((id) => {
+  const plans = visibleSids().map((id) => {
     const s = subjects[id];
     const date = state.settings.examDates[id] || "";
     const open = s.levels.map((_, i) => i).filter((i) => !isCompleted(id, i));
@@ -930,7 +981,7 @@ function viewMethod() {
   <div class="grid three">${studyTips.map((t) => `<section class="card"><h3>${esc(t.title)}</h3><p>${esc(t.text)}</p><p class="muted small">Hier: ${esc(t.where)}</p></section>`).join("")}</div>
   <section class="card"><h2>Operatoren verstehen</h2><p class="muted">Das Verb in der Aufgabe sagt dir, was erwartet wird. Anforderungsbereich I = wiedergeben, II = anwenden, III = beurteilen.</p>
   <div class="table-wrap"><table class="table"><thead><tr><th>Operator</th><th>AFB</th><th>Was wird erwartet?</th><th>Beispiel</th></tr></thead><tbody>${operators.map((o) => `<tr><td><b>${esc(o.op)}</b></td><td>${esc(o.level)}</td><td>${esc(o.expect)}</td><td class="muted">${esc(o.example)}</td></tr>`).join("")}</tbody></table></div></section>
-  <section class="card"><h2>In der Prüfung</h2><ul><li>Erst alle Aufgaben überfliegen, mit der leichtesten anfangen.</li><li>Operator unterstreichen und Fachbegriffe verwenden.</li><li>Bei Rechenaufgaben (Subnetz, dB) den Rechenweg aufschreiben – auch Teilpunkte zählen.</li><li>Bei Skizzen (OSI, Gewaltenteilung) lieber sauber und beschriftet als schön.</li><li>Am Ende 5 Minuten zum Kontrollieren einplanen.</li></ul></section>`;
+  <section class="card"><h2>In der Prüfung</h2><ul><li>Erst alle Aufgaben überfliegen, mit der leichtesten anfangen.</li><li>Operator unterstreichen und Fachbegriffe verwenden.</li><li>Bei Rechenaufgaben (Subnetz, dB) den Rechenweg aufschreiben – auch Teilpunkte zählen.</li><li>Bei Skizzen (OSI, Gewaltenteilung, Verdauungstrakt) lieber sauber und beschriftet als schön.</li><li>Bei Beschriftungen in der Medizin: deutschen Begriff <em>und</em> Fachbegriff angeben, wenn danach gefragt ist.</li><li>Am Ende 5 Minuten zum Kontrollieren einplanen.</li></ul></section>`;
 }
 
 /* --- Fortschritt --- */
@@ -945,13 +996,14 @@ function viewProgress() {
     <div class="stat"><b>${state.stats.answered}</b><span>Antworten · ${acc} % richtig</span></div>
     <div class="stat"><b>${state.stats.reviews}</b><span>Karten wiederholt</span></div>
   </div>
-  <div class="grid two">${SUBJECT_IDS.map((id) => `<section class="card theme-${id}"><div class="section-head"><h2>${esc(subjects[id].icon)} ${esc(subjects[id].shortTitle)}</h2>${ring(subjectProgress(id))}</div>
+  <div class="grid two">${visibleSids().map((id) => `<section class="card theme-${id}"><div class="section-head"><h2>${esc(subjects[id].icon)} ${esc(subjects[id].shortTitle)}</h2>${ring(subjectProgress(id))}</div>
     <ul class="level-list">${subjects[id].levels.map((l, i) => `<li><span>${i + 1}. ${esc(l.title)}</span>${sub(id).best[i] !== undefined ? `${starHtml(stars(sub(id).best[i]))} <span class="muted small">${sub(id).best[i]} %</span>` : `<span class="muted small">${isUnlocked(id, i) ? "offen" : "🔒"}</span>`}</li>`).join("")}</ul>
     <p class="small">Prüfung: ${sub(id).examBest ? `Bestwert ${sub(id).examBest} % ${sub(id).examPassed ? "🎓" : ""}` : "noch nicht versucht"}</p></section>`).join("")}</div>
   <section class="card"><h2>Abzeichen</h2><div class="badges">${BADGES.map((b) => `<div class="badge ${state.badges.includes(b.id) ? "earned" : ""}" title="${esc(b.desc)}"><span>${b.icon}</span><b>${esc(b.title)}</b><small>${esc(b.desc)}</small></div>`).join("")}</div></section>
   <section class="card"><h2>Aktivität</h2>${heatmap()}</section>
   <section class="card"><h2>Einstellungen</h2>
     <label class="switch"><input type="checkbox" data-setting="freeMode" ${state.settings.freeMode ? "checked" : ""}><span></span> Freier Modus – alle Level sofort freischalten</label>
+    <label class="inline">Ausbildungsberuf <select class="input" data-setting="profession">${professionOptions()}</select></label>
     <label class="inline">Darstellung <select class="input" data-setting="theme">${[["auto", "wie System"], ["light", "hell"], ["dark", "dunkel"]].map(([v, t]) => `<option value="${v}" ${state.settings.theme === v ? "selected" : ""}>${t}</option>`).join("")}</select></label>
     <h3>Lernstand sichern</h3><p class="muted small">Der Lernstand liegt nur in diesem Browser. Exportiere ihn, um ihn auf ein anderes Gerät mitzunehmen.</p>
     <div class="btn-row"><button class="btn" data-action="export">⬇ Exportieren</button><label class="btn">⬆ Importieren<input type="file" accept="application/json" data-import hidden></label><button class="btn bad" data-action="reset">Alles zurücksetzen</button></div></section>`;
@@ -1011,7 +1063,7 @@ document.addEventListener("click", (e) => {
   }
   if (a === "cards-all") {
     const sid = cardSession?.sid ?? null;
-    cardSession = { sid, queue: shuffle(CARDS.filter((c) => (!sid || c.sid === sid) && cardAvailable(c))).slice(0, 30).map((c) => c.id), flipped: false, done: 0, known: 0 };
+    cardSession = { sid, queue: shuffle(CARDS.filter((c) => (sid ? c.sid === sid : inScope(c.sid)) && cardAvailable(c))).slice(0, 30).map((c) => c.id), flipped: false, done: 0, known: 0 };
     render(); return;
   }
   if (a === "exam-start") { startExam(el.dataset.sid); return; }
@@ -1019,34 +1071,38 @@ document.addEventListener("click", (e) => {
   if (a === "train-next") { training.idx++; window.__noScroll = false; render(); return; }
   if (a === "train-quit") { training = null; render(); return; }
   if (a === "train-subject") { e.preventDefault(); training = null; location.hash = `#/training?fach=${el.dataset.sid}`; return; }
-  if (a === "train-missed") { startTraining(shuffle(Object.keys(state.missed).filter((id) => questionIndex.has(id))), "missed"); return; }
+  if (a === "train-missed") { startTraining(shuffle(visibleMissed().map(([id]) => id)), "missed"); return; }
   if (a === "gloss-filter") {
     $$("[data-action=gloss-filter]").forEach((c) => c.classList.toggle("active", c === el));
     $$(".term-item").forEach((t) => t.classList.toggle("hidden-sid", !!el.dataset.sid && t.dataset.sid !== el.dataset.sid));
     return;
   }
-  if (a === "osi-pick") {
+  if (a === "sort-pick") {
     const tool = el.closest("[data-tool]");
+    const g = SORT_GAMES[tool.dataset.tool];
+    const total = sortItems(tool).length;
     const next = Number(tool.dataset.next);
     const status = tool.querySelector("[data-status]");
     if (Number(el.dataset.i) === next) {
       el.remove();
-      tool.querySelector("[data-stack]").insertAdjacentHTML("afterbegin", `<div class="osi-layer">${next + 1} · ${esc(el.textContent)}</div>`);
+      tool.querySelector("[data-stack]").insertAdjacentHTML(g.stackTop ? "afterbegin" : "beforeend", `<div class="osi-layer">${next + 1} · ${esc(el.textContent)}</div>`);
       tool.dataset.next = next + 1;
-      if (next + 1 === 7) {
+      if (next + 1 === total) {
         const errs = Number(tool.dataset.errors);
-        status.innerHTML = `🎉 Geschafft${errs ? ` mit ${errs} Fehlversuch(en)` : " – fehlerfrei"}! <button type="button" class="btn small" data-action="osi-restart">Nochmal</button>`;
+        status.innerHTML = `🎉 Geschafft${errs ? ` mit ${errs} Fehlversuch(en)` : " – fehlerfrei"}! <button type="button" class="btn small" data-action="sort-restart">Nochmal</button>`;
         recordActivity(errs ? 5 : 15);
-      } else status.textContent = `Richtig! Welche Schicht ist Nr. ${next + 2}?`;
+      } else status.textContent = `Richtig! ${g.ask(next + 2)}`;
     } else {
       tool.dataset.errors = Number(tool.dataset.errors) + 1;
       el.classList.add("shake");
       setTimeout(() => el.classList.remove("shake"), 400);
-      status.textContent = `Nicht ganz – gesucht ist Schicht ${next + 1}. Tipp: ${["„Bitte“", "„Suche“", "„Vernünftige“", "„Transporte“", "„Seit“", "„Dem“", "„Abend“"][next]}`;
+      status.textContent = `Nicht ganz – ${g.hint ? g.hint(next) : `gesucht ist Nr. ${next + 1}. Tipp: beginnt mit „${sortItems(tool)[next][0]}“`}`;
     }
     return;
   }
-  if (a === "osi-restart") { initOsiGame(el.closest("[data-tool]")); return; }
+  if (a === "sort-restart") { initSortGame(el.closest("[data-tool]")); return; }
+  if (a === "sort-reverse") { const tool = el.closest("[data-tool]"); tool.dataset.dir = tool.dataset.dir === "rev" ? "" : "rev"; initSortGame(tool); return; }
+  if (a === "set-profession") { state.settings.profession = el.dataset.id; save(); render(); return; }
   if (a === "pomo-toggle") {
     pomo.running = !pomo.running;
     if (pomo.running) pomo.endAt = Date.now() + pomo.remaining * 1000;
@@ -1162,7 +1218,7 @@ document.addEventListener("submit", (e) => {
 
 document.addEventListener("input", (e) => {
   const tool = e.target.closest("[data-tool]");
-  if (tool && tool.dataset.tool !== "osi-game") updateTool(tool);
+  if (tool && !SORT_GAMES[tool.dataset.tool]) updateTool(tool);
   if (e.target.matches("[data-filter]")) {
     const q = normalizeAnswer(e.target.value);
     $$(e.target.dataset.filter).forEach((el) => el.classList.toggle("hidden-search", !!q && !normalizeAnswer(el.textContent).includes(q)));
@@ -1173,6 +1229,7 @@ document.addEventListener("change", (e) => {
   if (t.matches("[data-exam-date]")) { state.settings.examDates[t.dataset.examDate] = t.value; save(); render(); }
   if (t.matches("[data-setting=freeMode]")) { state.settings.freeMode = t.checked; save(); toast(t.checked ? "Freier Modus aktiv – alle Level sind offen." : "Freier Modus aus."); updateChrome(); }
   if (t.matches("[data-setting=theme]")) { state.settings.theme = t.value; applyTheme(); save(); }
+  if (t.matches("[data-setting=profession]")) { state.settings.profession = t.value; training = null; cardSession = null; save(); render(); }
   if (t.matches("[data-import]") && t.files[0]) {
     t.files[0].text().then((txt) => {
       const data = JSON.parse(txt);
