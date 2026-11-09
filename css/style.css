@@ -408,3 +408,11 @@ fieldset.plain legend { font-weight: 700; margin-bottom: 6px; }
   .card { box-shadow: none; border: 1px solid #ccc; padding: 10px; }
   .cheatsheet { columns: 2; }
 }
+
+/* Konto / Google-Anmeldung */
+.account { display: grid; gap: 8px; }
+.google-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.account-user { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.account-user img, .account-user > span:first-child { width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--line); }
+.account-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: .9rem; }
+.account-name small { display: block; font-weight: 400; opacity: .7; font-size: .75rem; }
