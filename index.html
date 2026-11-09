@@ -3,57 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0c1110">
-  <meta name="description" content="PrüfungsPilot: Dein interaktiver Lernpfad für das politische System und Netzwerktechnik mit OSI-Modell.">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="PrüfungsPilot: Interaktiver Lernpfad für das politische System und Netzwerktechnik mit OSI-Modell – mit Erklärvideos, Grafiken, Karteikarten, Prüfungssimulation und Lernplan.">
   <title>PrüfungsPilot – Klar lernen. Sicher bestehen.</title>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="app.js?v=2" defer></script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%23059669'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-size='34' font-family='Arial' font-weight='900' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css?v=3">
+  <script>
+    try { const t = JSON.parse(localStorage.getItem("pruefungspilot-v2") || "{}").settings?.theme; if (t && t !== "auto") document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script type="module" src="js/app.js?v=3"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Zum Lernbereich springen</a>
-  <header class="site-header">
-    <a class="brand" href="#" data-action="home" aria-label="Zur Startseite">
-      <span class="brand-mark" aria-hidden="true">P</span>
-      <span>PrüfungsPilot<span class="brand-subtitle">Klar lernen. Sicher bestehen.</span></span>
-    </a>
-    <nav class="main-nav" aria-label="Themenbereiche">
-      <button type="button" class="nav-link" data-action="home">Übersicht</button>
-      <button type="button" class="nav-link" data-action="subject" data-subject="politics">Politisches System</button>
-      <button type="button" class="nav-link" data-action="subject" data-subject="network">Netzwerk &amp; OSI</button>
-    </nav>
-  </header>
-
-  <main id="main" tabindex="-1">
-    <div id="app" class="app-shell"></div>
-  </main>
-
-  <footer class="site-footer">
-    <p>Dein Lernstand bleibt auf diesem Gerät. Es gibt keine Anmeldung und keine externe Speicherung.</p>
-    <details>
-      <summary>Quellen &amp; Hinweise</summary>
-      <div class="source-list">
-        <p><strong>Prüfungsgrundlagen:</strong> „Politisches System_9445.pdf“, Seiten 1–3; „Netzwerktechnik &amp; OSI 7 Schichten_6231.pdf“, Seiten 1–6. Beide PDFs sind eingescannte Klassenarbeits-/Klausurseiten; die PoWi-PDF enthält auch handschriftliche Korrekturen.</p>
-        <p><strong>Politik – ergänzende Quellen:</strong>
-          <a href="https://www.bundesregierung.de/breg-de/bundesregierung/bundeskabinett" target="_blank" rel="noreferrer">Bundesregierung: Bundeskabinett</a>,
-          <a href="https://www.bundespraesident.de/DE/bundespraesident/bundespraesident-node.html" target="_blank" rel="noreferrer">Bundespräsident: Amt und Person</a>,
-          <a href="https://www.bundesregierung.de/breg-de/bundesregierung/koalitionsvertrag-2021-1990800" target="_blank" rel="noreferrer">Koalitionsvertrag 2021 (Archiv)</a>,
-          <a href="https://www.bundeswahlleiterin.de/bundestagswahlen/2025.html" target="_blank" rel="noreferrer">Bundeswahlleiterin: Bundestagswahl 2025</a> und
-          <a href="https://www.gesetze-im-internet.de/gg/" target="_blank" rel="noreferrer">Grundgesetz</a> sowie
-          <a href="https://www.gesetze-im-internet.de/bwahlg/" target="_blank" rel="noreferrer">Bundeswahlgesetz</a>.
-        </p>
-        <p><strong>Netzwerk-Vertiefung:</strong>
-          <a href="https://www.rfc-editor.org/rfc/rfc791" target="_blank" rel="noreferrer">IPv4 (RFC 791)</a>,
-          <a href="https://www.rfc-editor.org/rfc/rfc894" target="_blank" rel="noreferrer">IPv4 über Ethernet (RFC 894)</a>,
-          <a href="https://www.rfc-editor.org/rfc/rfc826" target="_blank" rel="noreferrer">ARP (RFC 826)</a>,
-          <a href="https://standards.ieee.org/ieee/802.3/" target="_blank" rel="noreferrer">Ethernet-Standard IEEE 802.3</a>,
-          <a href="https://standards.ieee.org/ieee/802.11/" target="_blank" rel="noreferrer">WLAN-Standard IEEE 802.11</a>,
-          <a href="https://www.rfc-editor.org/rfc/rfc4861" target="_blank" rel="noreferrer">IPv6 Neighbor Discovery (RFC 4861)</a>,
-          <a href="https://www.rfc-editor.org/rfc/rfc9293" target="_blank" rel="noreferrer">TCP (RFC 9293)</a> und
-          <a href="https://www.rfc-editor.org/rfc/rfc768" target="_blank" rel="noreferrer">UDP (RFC 768)</a>.
-        </p>
-        <p>Ergänzungen sind im Lernpfad ausdrücklich markiert. Verbindlich für die Arbeit sind die Inhalte und Begriffe aus deinem Unterricht.</p>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Hauptnavigation">
+      <a class="brand" href="#/" aria-label="PrüfungsPilot – zur Übersicht">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>PrüfungsPilot<small>Klar lernen. Sicher bestehen.</small></span>
+      </a>
+      <nav class="nav" id="nav"></nav>
+      <div class="sidebar-foot">
+        <a class="pomo-mini" href="#/werkzeuge" title="Fokus-Timer"><span>⏱️ <span data-pomo-mode>Fokus</span></span><span data-pomo-time>25:00</span></a>
+        <button type="button" class="btn small" data-action="theme" aria-label="Hell/Dunkel umschalten">🌓 Hell / Dunkel</button>
       </div>
-    </details>
-  </footer>
+    </aside>
+    <div class="nav-backdrop" data-action="menu"></div>
+
+    <div class="main-col">
+      <header class="topbar">
+        <button type="button" class="btn small menu-btn" data-action="menu" aria-controls="sidebar" aria-label="Menü öffnen">☰ Menü</button>
+        <div class="hud" id="hud"></div>
+      </header>
+
+      <main id="main" tabindex="-1">
+        <div id="app" aria-live="polite">
+          <noscript><p>Bitte aktiviere JavaScript, um PrüfungsPilot zu nutzen.</p></noscript>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <p>Dein Lernstand bleibt auf diesem Gerät (localStorage) – keine Anmeldung, keine eigene Datenspeicherung. <strong>Hinweis:</strong> Die Erklärvideos werden über YouTube im erweiterten Datenschutzmodus (youtube-nocookie.com) eingebettet. Beim Laden einer Lektion mit Video werden dabei Daten (z. B. deine IP-Adresse) an YouTube/Google übertragen.</p>
+        <details>
+          <summary>Quellen &amp; Hinweise</summary>
+          <div class="source-list">
+            <p><strong>Prüfungsgrundlagen:</strong> „Politisches System_9445.pdf“, Seiten 1–3; „Netzwerktechnik &amp; OSI 7 Schichten_6231.pdf“, Seiten 1–6. Beide PDFs sind eingescannte Klassenarbeits-/Klausurseiten; die PoWi-PDF enthält auch handschriftliche Korrekturen.</p>
+            <p><strong>Politik – ergänzende Quellen:</strong>
+              <a href="https://www.bundesregierung.de/breg-de/bundesregierung/bundeskabinett" target="_blank" rel="noreferrer">Bundesregierung: Bundeskabinett</a>,
+              <a href="https://www.bundespraesident.de/DE/bundespraesident/bundespraesident-node.html" target="_blank" rel="noreferrer">Bundespräsident: Amt und Person</a>,
+              <a href="https://www.bundesregierung.de/breg-de/bundesregierung/koalitionsvertrag-2021-1990800" target="_blank" rel="noreferrer">Koalitionsvertrag 2021 (Archiv)</a>,
+              <a href="https://www.bundeswahlleiterin.de/bundestagswahlen/2025.html" target="_blank" rel="noreferrer">Bundeswahlleiterin: Bundestagswahl 2025</a> und
+              <a href="https://www.gesetze-im-internet.de/gg/" target="_blank" rel="noreferrer">Grundgesetz</a> sowie
+              <a href="https://www.gesetze-im-internet.de/bwahlg/" target="_blank" rel="noreferrer">Bundeswahlgesetz</a>.
+            </p>
+            <p><strong>Netzwerk-Vertiefung:</strong>
+              <a href="https://www.rfc-editor.org/rfc/rfc791" target="_blank" rel="noreferrer">IPv4 (RFC 791)</a>,
+              <a href="https://www.rfc-editor.org/rfc/rfc894" target="_blank" rel="noreferrer">IPv4 über Ethernet (RFC 894)</a>,
+              <a href="https://www.rfc-editor.org/rfc/rfc826" target="_blank" rel="noreferrer">ARP (RFC 826)</a>,
+              <a href="https://standards.ieee.org/ieee/802.3/" target="_blank" rel="noreferrer">Ethernet-Standard IEEE 802.3</a>,
+              <a href="https://standards.ieee.org/ieee/802.11/" target="_blank" rel="noreferrer">WLAN-Standard IEEE 802.11</a>,
+              <a href="https://www.rfc-editor.org/rfc/rfc4861" target="_blank" rel="noreferrer">IPv6 Neighbor Discovery (RFC 4861)</a>,
+              <a href="https://www.rfc-editor.org/rfc/rfc9293" target="_blank" rel="noreferrer">TCP (RFC 9293)</a> und
+              <a href="https://www.rfc-editor.org/rfc/rfc768" target="_blank" rel="noreferrer">UDP (RFC 768)</a>.
+            </p>
+            <p><strong>Videos:</strong> Erklärvideos von Deutscher Bundestag, bpb, explainity, simpleclub, EinfachSchule, Die Merkhilfe, IT &amp; Medien einfach erklärt, Patrick Boekhoven, The Morpheus Tutorials u. a. – die Rechte liegen bei den jeweiligen Kanälen.</p>
+            <p>Ergänzungen sind im Lernpfad ausdrücklich markiert. Verbindlich für die Arbeit sind die Inhalte und Begriffe aus deinem Unterricht.</p>
+          </div>
+        </details>
+      </footer>
+    </div>
+  </div>
+  <div id="toasts" aria-live="polite"></div>
 </body>
 </html>
